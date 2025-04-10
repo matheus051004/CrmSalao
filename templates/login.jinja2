@@ -61,20 +61,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const notyf = new Notyf();
-            {% if message %}
-                notyf.success("{{ message }}");
-            {% endif %}
-            {% if error %}
-                notyf.error("{{ error }}");
-            {% endif %}
-        });
-    </script>
-
-    <script src="/static/bootstrap/bootstrap.bundle.js?v={{ v }}"></script>
-    <script src="/static/notyf/notyf.min.js?v={{ v }}"></script>
+{% include 'parts/foot.jinja2' %}
 </body>
 </html>
