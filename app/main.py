@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-import glob
+import app.glob as glob
 
 from app.routers.auth import login
 
