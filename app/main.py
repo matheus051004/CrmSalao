@@ -10,7 +10,7 @@ from app.routers.crm import crm
 
 from app.middlewares.AuthMiddleware import AuthMiddleware
 
-app = FastAPI(title="FastAPI Example", description="A simple FastAPI example", redirect_slashes=False)
+app = FastAPI(title="FastAPI Example", description="A simple FastAPI example")
 app.mount('/static', StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="./templates")
 
