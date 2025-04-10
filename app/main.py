@@ -13,6 +13,7 @@ app.mount('/static', StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="./templates")
 
 templates.env.globals['v'] = os.environ.get('VERSION')
+templates.env.globals['crm_name'] = os.environ.get('CRM_NAME')
 glob.templates = templates
 
 app.include_router(login.router)
