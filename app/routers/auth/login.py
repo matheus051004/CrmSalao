@@ -8,7 +8,7 @@ router = APIRouter(
     tags=['login']
 )
 
-templates = Jinja2Templates(directory="..../templates")
+templates = Jinja2Templates(directory="./././templates")
 
 @router.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
