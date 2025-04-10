@@ -22,7 +22,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         # Se não houver cookies ou forem inválidos, redireciona para o login
         if not username or not password or username != os.environ.get('CRM_USER') or password != os.environ.get(
                 'CRM_PASSWORD'):
-            return RedirectResponse(url="/login")
+            return RedirectResponse(url="/login", status_code=303)
 
         # Se estiver autenticado, continua para a próxima etapa
         response = await call_next(request)
