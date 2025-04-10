@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 import app.glob as g
 
 router = APIRouter(
-    prefix='/login/',
+    prefix='/login',
     tags=['login']
 )
 
@@ -49,7 +49,7 @@ async def login_post(request: Request):
         return response
 
 
-@router.post('logout', response_class=HTMLResponse, name='logout')
+@router.post('/logout', response_class=HTMLResponse, name='logout')
 async def logout(request: Request):
     response = RedirectResponse(url="/login/", status_code=303)
     response.delete_cookie("username")
