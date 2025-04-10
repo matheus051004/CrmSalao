@@ -6,6 +6,7 @@
     <title>Login - CRM Salão/Barbearia</title>
     <!-- Bootstrap 5 CSS -->
     <link href="/static/bootstrap/bootstrap.css?v={{ v }}" rel="stylesheet">
+    <link href="/static/notyf/notyf.min.css?v={{ v }}" rel="stylesheet">
     <!-- Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -67,7 +68,19 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle com Popper -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {)
+            const notyf = new Notyf();
+            {% if message %}
+                notyf.success("{{ message }}");
+            {% endif %}
+            {% if error %}
+                notyf.error("{{ error }}");
+            {% endif %}
+        });
+    </script>
+
     <script src="/static/bootstrap/bootstrap.bundle.js?v={{ v }}"></script>
+    <script src="/static/notyf/notyf.min.js?v={{ v }}"></script>
 </body>
 </html>

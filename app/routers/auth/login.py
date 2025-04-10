@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="./././templates")
 
 @router.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("login.jinja", {
+    return templates.TemplateResponse("login.jinja2", {
         'v': os.environ.get('VERSION'),
         'request': request,
     })
@@ -41,7 +41,7 @@ async def login_post(request: Request):
         )
         return response
     else:
-        response = templates.TemplateResponse("login.jinja", {
+        response = templates.TemplateResponse("login.jinja2", {
             "v": os.environ.get("VERSION"),
             "request": request,
             "error": "Invalid username or password"
