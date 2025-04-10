@@ -19,8 +19,8 @@ async def login(request: Request):
 @router.post("/", response_class=HTMLResponse)
 async def login_post(request: Request):
     form = await request.form()
-    username = form.get("username")
-    password = form.get("password")
+    username = form.get("username").strip()
+    password = form.get("password").strip()
 
     print(username, password)
 
