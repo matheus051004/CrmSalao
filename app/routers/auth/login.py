@@ -3,19 +3,16 @@ import os
 from fastapi import APIRouter
 from fastapi import Request
 from starlette.responses import HTMLResponse, RedirectResponse
-from starlette.templating import Jinja2Templates
+import app.globals as g
 
 router = APIRouter(
     prefix='/login',
     tags=['login']
 )
 
-templates = Jinja2Templates(directory="./././templates")
-
 @router.get("/", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("login.jinja2", {
-        'v': os.environ.get('VERSION'),
+    return g.templates.TemplateResponse("login.jinja2", {
         'request': request,
     })
 
@@ -41,8 +38,7 @@ async def login_post(request: Request):
         )
         return response
     else:
-        response = templates.TemplateResponse("login.jinja2", {
-            "v": os.environ.get("VERSION"),
+        response = g.templates.TemplateResponse("login.jinja2", {
             "request": request,
             "error": "Invalid username or password"
         })
