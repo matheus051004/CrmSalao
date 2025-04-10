@@ -24,7 +24,7 @@ async def login_post(request: Request):
 
     print(username, password)
 
-    if username == os.environ["CRM_USER"] and password == os.environ["CRM_PASSWORD"]:
+    if username == os.environ.get('CRM_USER') and password == os.environ.get("CRM_PASSWORD"):
         response = RedirectResponse(url="/crm", status_code=303)
         response.set_cookie(
             key="username",
