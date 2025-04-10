@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <title>Dashboard CRM - Salão/Barbearia</title>
+    <title>Dashboard CRM</title>
     {% include 'parts/head.jinja2' %}
     <style>
         body {
             background-color: #f8f9fa;
             min-height: 100vh;
+            transition: all 0.3s;
         }
 
         .sidebar {
@@ -15,14 +16,24 @@
             height: 100vh;
             position: fixed;
             width: 250px;
+            transition: all 0.3s;
+            z-index: 1000;
+            left: 0;
+        }
+
+        .sidebar-collapsed .sidebar {
+            left: -250px;
         }
 
         .sidebar-logo {
             padding: 1.5rem;
             border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .sidebar-logo i {
+        .sidebar-logo i.logo-icon {
             color: var(--bs-primary);
         }
 
@@ -51,6 +62,11 @@
         .main-content {
             margin-left: 250px;
             padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-collapsed .main-content {
+            margin-left: 0;
         }
 
         .card {
@@ -104,13 +120,87 @@
             position: relative;
             height: 300px;
         }
+
+        .navbar-toggler {
+            display: none;
+            margin-right: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--bs-primary);
+            font-size: 1.5rem;
+            padding: 0.5rem;
+        }
+
+        .mobile-header {
+            display: none;
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                left: -250px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .navbar-toggler {
+                display: block;
+            }
+
+            .mobile-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .sidebar-expanded .sidebar {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
+                z-index: 999;
+            }
+
+            .sidebar-expanded .sidebar-overlay {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
+<!-- Mobile Header -->
+<div class="mobile-header">
+    <button class="navbar-toggler" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h4 class="m-0"><i class="fas fa-cut me-2"></i> CRM Barbearia</h4>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-logo">
-        <h4><i class="fas fa-cut me-2"></i> CRM Barbearia</h4>
+        <h4><i class="fas fa-cut me-2 logo-icon"></i> CRM Barbearia</h4>
+        <button class="btn btn-sm d-none d-lg-block" id="sidebarCollapseBtn">
+            <i class="fas fa-chevron-left"></i>
+        </button>
     </div>
     <div class="sidebar-menu">
         <a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
@@ -127,17 +217,25 @@
 
 <!-- Main Content -->
 <div class="main-content">
+    <div class="d-lg-none mb-3">
+        <button class="btn btn-primary btn-sm" id="mobileToggle">
+            <i class="fas fa-bars me-1"></i> Menu
+        </button>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Dashboard</h2>
         <div>
-            <button class="btn btn-outline-secondary me-2"><i class="fas fa-download me-1"></i> Exportar</button>
+            <button class="btn btn-outline-secondary me-2 d-none d-sm-inline-block"><i class="fas fa-download me-1"></i>
+                Exportar
+            </button>
             <button class="btn btn-primary"><i class="fas fa-plus me-1"></i> Novo Lead</button>
         </div>
     </div>
 
     <!-- Stats Row -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg-3">
             <div class="card card-stat">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -152,7 +250,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg-3">
             <div class="card card-stat">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -167,7 +265,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg-3">
             <div class="card card-stat">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -182,7 +280,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6 col-lg-3">
             <div class="card card-stat">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -201,7 +299,7 @@
 
     <!-- Charts Row -->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Leads por Mês</h5>
@@ -211,7 +309,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Status dos Leads</h5>
@@ -226,9 +324,9 @@
     <!-- Leads Table -->
     <div class="card">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">Leads Recentes</h5>
-                <div class="input-group" style="width: 250px;">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3">
+                <h5 class="card-title mb-2 mb-sm-0">Leads Recentes</h5>
+                <div class="input-group" style="max-width: 250px;">
                     <input type="text" class="form-control" placeholder="Pesquisar leads...">
                     <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
                 </div>
@@ -267,6 +365,7 @@
                             <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-ellipsis-v"></i></button>
                         </td>
                     </tr>
+                    <!-- Outros registros da tabela mantidos iguais -->
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
@@ -351,10 +450,10 @@
                 </table>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center">
-                <div>Mostrando 1-5 de 127 leads</div>
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <div class="mb-2 mb-sm-0">Mostrando 1-5 de 127 leads</div>
                 <nav>
-                    <ul class="pagination mb-0">
+                    <ul class="pagination mb-0 justify-content-center justify-content-sm-end">
                         <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -370,7 +469,7 @@
 {% include 'parts/foot.jinja2' %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Gráfico de Leads por Mês
+        // Gráficos (mantidos como estavam)
         const leadsCtx = document.getElementById('leadsChart').getContext('2d');
         const leadsChart = new Chart(leadsCtx, {
             type: 'bar',
@@ -401,7 +500,6 @@
             }
         });
 
-        // Gráfico de Status dos Leads
         const statusCtx = document.getElementById('leadStatusChart').getContext('2d');
         const statusChart = new Chart(statusCtx, {
             type: 'doughnut',
@@ -435,6 +533,56 @@
                     }
                 }
             }
+        });
+
+        // Funcionalidade de toggle da sidebar
+        const body = document.body;
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
+        const mobileToggle = document.getElementById('mobileToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        // Toggle para dispositivos desktop
+        if (sidebarCollapseBtn) {
+            sidebarCollapseBtn.addEventListener('click', function () {
+                body.classList.toggle('sidebar-collapsed');
+
+                // Muda o ícone do botão
+                const icon = this.querySelector('i');
+                if (body.classList.contains('sidebar-collapsed')) {
+                    icon.classList.remove('fa-chevron-left');
+                    icon.classList.add('fa-chevron-right');
+                } else {
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-left');
+                }
+            });
+        }
+
+        // Toggle para dispositivos móveis
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function () {
+                body.classList.toggle('sidebar-expanded');
+            });
+        }
+
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', function () {
+                body.classList.toggle('sidebar-expanded');
+            });
+        }
+
+        // Fechar sidebar ao clicar no overlay
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function () {
+                body.classList.remove('sidebar-expanded');
+            });
+        }
+
+        // Ajusta os gráficos ao redimensionar a janela
+        window.addEventListener('resize', function () {
+            leadsChart.resize();
+            statusChart.resize();
         });
     });
 </script>
