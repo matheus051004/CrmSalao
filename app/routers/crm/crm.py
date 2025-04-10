@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
-import app.globals as g
+import app.glob as g
 
 router = APIRouter(
     prefix="/crm",

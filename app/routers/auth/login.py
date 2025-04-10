@@ -3,7 +3,7 @@ import os
 from fastapi import APIRouter
 from fastapi import Request
 from starlette.responses import HTMLResponse, RedirectResponse
-import app.globals as g
+import app.glob as g
 
 router = APIRouter(
     prefix='/login',
