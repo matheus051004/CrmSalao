@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 
-ENV CRM_NAME="CRM Salão/Barbearia"
+ENV CRM_NAME="CRM BarberPRO"
 ENV CRM_USER="admin"
 ENV CRM_PASSWORD="admin"
 ENV VERSION="1.0.3"
