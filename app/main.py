@@ -13,4 +13,5 @@ app.mount('/static', StaticFiles(directory="./static"), name="static")
 async def read_root(request: Request):
     return templates.TemplateResponse("login.jinja", {
         'v': "1.0.0",
+        'request': request,
     })
