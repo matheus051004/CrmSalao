@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 import app.glob as g
 
 router = APIRouter(
-    prefix='/login',
+    prefix='/login/',
     tags=['login']
 )
 
