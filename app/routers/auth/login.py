@@ -47,3 +47,11 @@ async def login_post(request: Request):
         response.set_cookie("username", "false", max_age=60 * 60 * 24 * 7)
         response.set_cookie("password", "false", max_age=60 * 60 * 24 * 7)
         return response
+
+
+@router.post('logout', response_class=HTMLResponse, name='logout')
+async def logout(request: Request):
+    response = RedirectResponse(url="/login/", status_code=303)
+    response.delete_cookie("username")
+    response.delete_cookie("password")
+    return response
