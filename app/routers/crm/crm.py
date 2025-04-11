@@ -9,7 +9,7 @@ router = APIRouter(
     tags=["crm"]
 )
 
-@router.get('/', name='dashboard', response_class=HTMLResponse)
+@router.get('/', name='crm', response_class=HTMLResponse)
 async def crm(request: Request):
     return await dashboard(request)
 
