@@ -25,7 +25,14 @@ app.include_router(crm.router)
 # middlewares
 app.add_middleware(AuthMiddleware)
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
 @app.on_event("startup")
 async def startup_event():
-    print("INICIADO")
+    logger.info("INICIADO")
     create_all_tables()
+    logger.info("Tabelas criadas com sucesso")
