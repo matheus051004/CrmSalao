@@ -10,8 +10,9 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_class=HTMLResponse)
+@router.get('/dashboard', name='dashboard', response_class=HTMLResponse)
 async def crm(request: Request):
     return g.templates.TemplateResponse('crm.jinja2', {
         'request': request,
+        'sidebar': 'dashboard',
     })
