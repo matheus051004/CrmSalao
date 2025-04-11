@@ -27,4 +27,7 @@ app.add_middleware(AuthMiddleware)
 
 
 # tabelas
-create_all_tables()
+@app.on_event("startup")
+async def startup():
+    create_all_tables()
+    print("All tables created")
