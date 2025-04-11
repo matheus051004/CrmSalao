@@ -9,9 +9,12 @@ router = APIRouter(
     tags=["crm"]
 )
 
+@router.get('/', name='dashboard', response_class=HTMLResponse)
+async def crm(request: Request):
+    return await dashboard(request)
 
 @router.get('/dashboard', name='dashboard', response_class=HTMLResponse)
-async def crm(request: Request):
+async def dashboard(request: Request):
     return g.templates.TemplateResponse('crm.jinja2', {
         'request': request,
         'sidebar': 'dashboard',
