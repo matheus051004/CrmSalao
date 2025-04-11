@@ -1,3 +1,3 @@
-from app.models.lead import Lead
+from app.models.cliente import Lead
 
 lead = Lead()
