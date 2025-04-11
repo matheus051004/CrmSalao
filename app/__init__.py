@@ -1,3 +1,3 @@
-from app.models.cliente import Lead
+from app.models.cliente import Cliente
 
-lead = Lead()
+c = Cliente()
