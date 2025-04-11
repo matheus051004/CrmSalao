@@ -7,6 +7,7 @@ import app.glob as glob
 
 from app.routers.auth import login
 from app.routers.crm import crm
+from app.database import create_all_tables
 
 from app.middlewares.AuthMiddleware import AuthMiddleware
 
@@ -23,3 +24,7 @@ app.include_router(crm.router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
+
+
+# tabelas
+create_all_tables()
