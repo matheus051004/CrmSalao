@@ -11,9 +11,6 @@ from app.database import create_all_tables
 
 from app.middlewares.AuthMiddleware import AuthMiddleware
 
-print("INICIADO")
-create_all_tables()
-
 app = FastAPI(title="FastAPI Example", description="A simple FastAPI example")
 app.mount('/static', StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="./templates")
@@ -27,3 +24,8 @@ app.include_router(crm.router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
+
+@app.on_event("startup")
+async def startup_event():
+    print("INICIADO")
+    create_all_tables()
