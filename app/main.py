@@ -10,8 +10,19 @@ from app.routers.crm import crm
 from app.database import create_all_tables
 
 from app.middlewares.AuthMiddleware import AuthMiddleware
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="FastAPI Example", description="A simple FastAPI example")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Código executado na inicialização
+    create_all_tables()
+    print("All tables created")
+    yield
+    # Código executado no desligamento
+
+
+app = FastAPI(title="FastAPI Example", description="A simple FastAPI example", lifespan=lifespan)
 app.mount('/static', StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="./templates")
 
@@ -24,10 +35,3 @@ app.include_router(crm.router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
-
-
-# tabelas
-@app.on_event("startup")
-async def startup():
-    create_all_tables()
-    print("All tables created")
