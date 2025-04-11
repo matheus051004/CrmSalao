@@ -33,6 +33,5 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("INICIADO")
     create_all_tables()
     logger.info("Tabelas criadas com sucesso")
