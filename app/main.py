@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Código executado na inicialização
+    print("INICIADO")
     create_all_tables()
     print("All tables created")
     yield
