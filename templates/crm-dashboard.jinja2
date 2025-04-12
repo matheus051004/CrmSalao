@@ -283,7 +283,7 @@
 
     let profissionalsAgendamentosChart = null
     function profissionalsAgendamentos(query_interval = 'month') {
-        fetch('{{ url_for('pa-graph') }}?query_interval='.replace('http', 'https') + query_interval).then(res => {
+        fetch('{{ url_for('pa-graph') }}?interval_query='.replace('http', 'https') + query_interval).then(res => {
             (async () => {
                 const data = await res.json()
 

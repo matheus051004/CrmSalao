@@ -61,6 +61,7 @@ async def dashboard():
 
 @router.get('/profissionals-agendamentos-graph', name='pa-graph')
 async def profissionals_agendamentos_graph(interval_query: str = 'month'):
+    print(interval_query)
     db = SessionLocal()
     try:
         return get_agendamentos_from_all_profissionals(interval_query)
