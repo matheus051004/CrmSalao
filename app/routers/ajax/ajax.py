@@ -121,7 +121,7 @@ def get_today_agendamentos_count() -> int | None:
     db = SessionLocal()
     date_today = datetime.now().date()
     sql = f"""
-    SELECT COUNT(*) FROM agendamentos WHERE DATE(created_at) = {date_today}
+    SELECT COUNT(*) FROM agendamentos WHERE DATE(created_at) = '{date_today}'
     """
 
     try:

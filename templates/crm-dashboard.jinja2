@@ -74,7 +74,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <div class="stat-value">0</div>
+                            <div id="today_agendamentos" class="stat-value">Aguarde...</div>
                             <div class="stat-label">Agendamentos hoje</div>
                         </div>
                         <div class="stat-icon">
@@ -141,7 +141,7 @@
                 const data = await res.json()
                 document.getElementById('clientes_count').innerHTML = data.clientes_count
                 document.getElementById('clientes_mes_count').innerHTML = data.clientes_mes_count
-
+                document.getElementById('today_agendamentos').innerHTML = data.today_agendamentos
                 charts(data)
             })()
         })
