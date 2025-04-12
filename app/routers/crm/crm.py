@@ -61,11 +61,9 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
 def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
     db = SessionLocal()
     try:
-        query = db.query(Cliente).order_by(
-            getattr(Cliente, order_by).desc() if order == 'desc' else getattr(Cliente, order_by))
+        query = db.query(Cliente).order_by(getattr(Cliente, order_by).desc() if order == 'desc' else getattr(Cliente, order_by))
         total = query.count()
         items = query.offset((page - 1) * per_page).limit(per_page).all()
-        # Return per_page along with items and total
         return items, total, per_page
     finally:
         db.close()
