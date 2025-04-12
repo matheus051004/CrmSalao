@@ -3,6 +3,8 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 import app.glob as g
+from app import Cliente
+from app.database import SessionLocal
 
 router = APIRouter(
     prefix="/crm",
@@ -21,8 +23,23 @@ async def dashboard(request: Request):
     })
 
 @router.get('/clientes', name='clientes', response_class=HTMLResponse)
-async def clientes(request: Request):
+async def clientes(request: Request, page: int = 1, order_by: str = 'id', order: str = 'asc'):
+    items, total = get_clients(order_by=order_by, order=order, page=page)
     return g.templates.TemplateResponse('crm-clientes.jinja2', {
         'request': request,
         'sidebar': 'clientes',
+        'items': items,
+        'total': total,
     })
+
+
+# db functions
+def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
+    db = SessionLocal()
+    try:
+        query = db.query(Cliente).order_by(getattr(Cliente, order_by).desc() if order == 'desc' else getattr(Cliente, order_by))
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+        return items, total
+    finally:
+        db.close()
