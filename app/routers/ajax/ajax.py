@@ -51,7 +51,8 @@ async def dashboard():
             'agendamentos_nov': monthly_agendamentos_count[10]['total'],
             'agendamentos_dec': monthly_agendamentos_count[11]['total'],
             'today_agendamentos': today_agendamentos,
-            'monthly_faturamento': get_monthly_year_faturamento()
+            'monthly_faturamento': get_monthly_year_faturamento(),
+            'monthly_faturamento_previsto': get_monthly_year_faturamento_previsto(),
         }
     finally:
         db.close()
@@ -146,6 +147,36 @@ def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[float
         db = SessionLocal()
         sql = f"""
             SELECT * FROM agendamentos WHERE status = 'concluido' AND EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year}
+        """
+        try:
+            result = db.execute(text(sql))
+            agendamentos = [dict(row._mapping) for row in result.fetchall()]
+
+            for agendamento in agendamentos:
+                for servico_id in agendamento['servicos']:
+                    servico = db.query(Servico).filter_by(id=servico_id).first()
+                    faturamento += float(servico.price)
+
+            months_faturamento.append(faturamento)
+        finally:
+            db.close()
+
+    return months_faturamento
+
+
+def get_monthly_year_faturamento_previsto(current_year=datetime.now().year) -> list[float] | None:
+    """
+    Função para calcular o faturamento mensal de um ano específico, previsto.
+    :param current_year:
+    :return:
+    """
+    months_faturamento = []
+    for month in range(1, 13):
+        faturamento = 0
+
+        db = SessionLocal()
+        sql = f"""
+            SELECT * FROM agendamentos WHERE EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year}
         """
         try:
             result = db.execute(text(sql))

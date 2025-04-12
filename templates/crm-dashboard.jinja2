@@ -197,26 +197,48 @@
             type: 'bar',
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                datasets: [{
-                    label: 'Faturamento',
-                    data: [
-                        data.monthly_faturamento[0],
-                        data.monthly_faturamento[1],
-                        data.monthly_faturamento[2],
-                        data.monthly_faturamento[3],
-                        data.monthly_faturamento[4],
-                        data.monthly_faturamento[5],
-                        data.monthly_faturamento[6],
-                        data.monthly_faturamento[7],
-                        data.monthly_faturamento[8],
-                        data.monthly_faturamento[9],
-                        data.monthly_faturamento[10],
-                        data.monthly_faturamento[11]
-                    ],
-                    backgroundColor: 'rgba(87,235,54,0.5)',
-                    borderColor: 'rgb(99,235,54)',
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: 'Previsto',
+                        data: [
+                            data.monthly_faturamento_previsto[0],
+                            data.monthly_faturamento_previsto[1],
+                            data.monthly_faturamento_previsto[2],
+                            data.monthly_faturamento_previsto[3],
+                            data.monthly_faturamento_previsto[4],
+                            data.monthly_faturamento_previsto[5],
+                            data.monthly_faturamento_previsto[6],
+                            data.monthly_faturamento_previsto[7],
+                            data.monthly_faturamento_previsto[8],
+                            data.monthly_faturamento_previsto[9],
+                            data.monthly_faturamento_previsto[10],
+                            data.monthly_faturamento_previsto[11]
+                        ],
+                        backgroundColor: 'rgba(235,226,54,0.5)',
+                        borderColor: 'rgb(235,232,54)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Confirmado',
+                        data: [
+                            data.monthly_faturamento[0],
+                            data.monthly_faturamento[1],
+                            data.monthly_faturamento[2],
+                            data.monthly_faturamento[3],
+                            data.monthly_faturamento[4],
+                            data.monthly_faturamento[5],
+                            data.monthly_faturamento[6],
+                            data.monthly_faturamento[7],
+                            data.monthly_faturamento[8],
+                            data.monthly_faturamento[9],
+                            data.monthly_faturamento[10],
+                            data.monthly_faturamento[11]
+                        ],
+                        backgroundColor: 'rgba(87,235,54,0.5)',
+                        borderColor: 'rgb(99,235,54)',
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 responsive: true,
@@ -225,7 +247,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return new Intl.NumberFormat('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL'
@@ -237,7 +259,7 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 let label = context.dataset.label || '';
                                 if (label) {
                                     label += ': ';
