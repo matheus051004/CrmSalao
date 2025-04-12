@@ -27,10 +27,23 @@ async def dashboard(request: Request):
 
 @router.get('/clientes', name='clientes', response_class=HTMLResponse)
 async def clientes(request: Request, page: int = 1, order_by: str = 'id', order: str = 'asc', per_page: int = 10):
-    # Ensure per_page is a valid value
+
     valid_per_page_values = [10, 25, 50, 100]
     if per_page not in valid_per_page_values:
         per_page = 10
+
+    # mock
+    for i in range(1, 200):
+        db = SessionLocal()
+        try:
+            cliente = Cliente(
+                name=f'Cliente {i}',
+                email=f'<EMAIL>',
+                phone=f'<PHONE>',
+            )
+            db.add(cliente)
+        finally:
+            db.close()
 
     # Get clients with pagination
     items, total, _ = get_clients(order_by=order_by, order=order, page=page, per_page=per_page)
