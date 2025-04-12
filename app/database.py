@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -19,9 +21,10 @@ def create_all_tables():
 
 # funções CRUD
 def get_monthly_clientes_count():
+    current_year = datetime.now().year
     db = SessionLocal()
 
-    sql = """
+    sql = f"""
     WITH meses AS (
     SELECT generate_series(1, 12) AS mes
 ),
@@ -30,7 +33,7 @@ clientes_por_mes AS (
         EXTRACT(MONTH FROM created_at)::int AS mes,
         COUNT(*) AS total
     FROM clientes
-    WHERE EXTRACT(YEAR FROM created_at) = 2025
+    WHERE EXTRACT(YEAR FROM created_at) = {current_year}
     GROUP BY mes
 )
 SELECT 
@@ -48,12 +51,11 @@ ORDER BY m.mes;
     finally:
         db.close()
 
-
-
 def get_monthly_agendamentos_count():
+    current_year = datetime.now().year
     db = SessionLocal()
 
-    sql = """
+    sql = f"""
     WITH meses AS (
     SELECT generate_series(1, 12) AS mes
 ),
@@ -62,7 +64,7 @@ agendamentos_por_mes AS (
         EXTRACT(MONTH FROM created_at)::int AS mes,
         COUNT(*) AS total
     FROM agendamentos
-    WHERE EXTRACT(YEAR FROM created_at) = 2025 AND (status = 'agendado' OR status = 'concluido')
+    WHERE EXTRACT(YEAR FROM created_at) = {current_year} AND (status = 'agendado' OR status = 'concluido')
     GROUP BY mes
 )
 SELECT 
@@ -77,5 +79,18 @@ ORDER BY m.mes;
         result = db.execute(text(sql))
         rows = result.fetchall()
         return [{"mes": row[0], "total": row[1]} for row in rows]
+    finally:
+        db.close()
+
+def get_today_agendamentos_count():
+    db = SessionLocal()
+
+    sql = """
+    SELECT COUNT(*) FROM agendamentos WHERE DATE(created_at) = CURRENT_DATE
+    """
+
+    try:
+        result = db.execute(text(sql))
+        return result.scalar()
     finally:
         db.close()
