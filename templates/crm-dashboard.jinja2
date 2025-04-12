@@ -109,7 +109,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Clientes e agendamentos</h5>
                     <div class="chart-container">
-                        <canvas id="leadsChart"></canvas>
+                        <canvas id="clientesChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -134,9 +134,43 @@
                 const data = await res.json()
                 document.getElementById('clientes_count').innerHTML = data.clientes_count
                 document.getElementById('clientes_mes_count').innerHTML = data.clientes_mes_count
+
+                charts(data)
             })()
         })
     })
+
+    function charts(data) {
+        const clientesCtx = document.getElementById('clientesChart').getContext('2d');
+        const clientesChart = new Chart(clientesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Outubro', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Clientes',
+                    data: [data.clientes_jan, data.clientes_feb, data.clientes_mar, data.clientes_apr, data.clientes_may, data.clientes_jun, data.clientes_jul, data.clientes_aug, data.clientes_sep, data.clientes_oct, data.clientes_nov, data.clientes_dec],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }, {
+                    label: 'Agendamentos',
+                    data: [12, 18, 20, 18, 24, 27, 22, 24, 28],
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

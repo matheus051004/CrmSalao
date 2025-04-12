@@ -1,35 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Gráficos (mantidos como estavam)
-    const leadsCtx = document.getElementById('leadsChart').getContext('2d');
-    const leadsChart = new Chart(leadsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
-            datasets: [{
-                label: 'Novos Leads',
-                data: [18, 25, 32, 28, 36, 40, 35, 38, 43],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 1
-            }, {
-                label: 'Leads Convertidos',
-                data: [12, 18, 20, 18, 24, 27, 22, 24, 28],
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgb(75, 192, 192)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
     const statusCtx = document.getElementById('leadStatusChart').getContext('2d');
     const statusChart = new Chart(statusCtx, {
         type: 'doughnut',
