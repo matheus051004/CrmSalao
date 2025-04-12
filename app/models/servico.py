@@ -9,5 +9,6 @@ class Servico(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     price = Column(DECIMAL, nullable=False)
+    minutes = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
