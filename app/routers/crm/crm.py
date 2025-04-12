@@ -1,8 +1,8 @@
 import math
 
 from fastapi import APIRouter
-from starlette.requests import Request
-from starlette.responses import HTMLResponse
+from fastapi.requests import Request
+from fastapi.responses import HTMLResponse
 
 import app.glob as g
 from app import Cliente
