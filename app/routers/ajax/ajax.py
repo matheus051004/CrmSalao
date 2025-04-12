@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter
 from sqlalchemy import text
 
-from app import Servico, Profissional
+from app import Servico, Profissional, Agendamento
 from app.database import SessionLocal
 from app.models.cliente import Cliente
 
@@ -60,6 +60,16 @@ async def dashboard():
         db.close()
 
 
+@router.get('/profissionals-agendamentos-graph', name='pa-graph')
+async def profissionals_agendamentos_graph(interval_query: str = 'month'):
+    db = SessionLocal()
+    try:
+        return get_agendamentos_from_all_profissionals(interval_query)
+    finally:
+        db.close()
+
+
+# funções db
 def get_monthly_clientes_count(current_year=datetime.now().year) -> list[dict] | None:
     db = SessionLocal()
 
@@ -222,29 +232,41 @@ def get_month_faturamento(month=datetime.now().month, current_year=datetime.now(
         db.close()
 
 
-def get_month_agendamentos_per_profissional(profissional_id: int, month=datetime.now().month,
-                                                  current_year=datetime.now().year) -> list[dict] | None:
+def get_agendamentos_from_profissional(profissional_id: int, interval_query: str = 'month') -> list[Agendamento] | None:
     """
-    Função para obter agendamentos de um profissional em um mês específico.
+    Função para obter agendamentos de um profissional específico.
+    :param interval_query: Intervalo de consulta
     :param profissional_id: ID do profissional
-    :param month:
-    :param current_year:
     :return:
     """
     db = SessionLocal()
-    sql = f"""
-        SELECT * FROM agendamentos WHERE EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year} AND profissional_id = {profissional_id}
-    """
+    current_year = datetime.now().year
+    sql = ''
+
+    if interval_query == 'month':
+        month = datetime.now().month
+        sql = f"""
+            SELECT * FROM agendamentos WHERE EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year} AND profissional_id = {profissional_id}
+        """
+    elif interval_query == 'week':
+        sql = f"""
+            SELECT * FROM agendamentos WHERE created_at >= NOW() - INTERVAL '7 days' AND profissional_id = {profissional_id}
+        """
+    elif interval_query == 'day':
+        sql = f"""
+            SELECT * FROM agendamentos WHERE DATE(created_at) = DATE(NOW()) AND profissional_id = {profissional_id}
+        """
     try:
         result = db.execute(text(sql))
-        agendamentos = [dict(row._mapping) for row in result.fetchall()]
+        agendamentos = [Agendamento(**dict(row._mapping)) for row in result.fetchall()]
         return agendamentos
     finally:
         db.close()
 
-def get_agendamentos_from_all_profissionals() -> list[dict] | None:
+
+def get_agendamentos_from_all_profissionals(interval_query: str = 'month') -> list[dict] | None:
     """
-    Função para obter agendamentos de todos os profissionais no mês atual.
+    Função para obter agendamentos de todos os profissionais.
     :return:
     """
     profissionals_agndmts = []
@@ -255,7 +277,7 @@ def get_agendamentos_from_all_profissionals() -> list[dict] | None:
         for profissional in profissionals:
             profissionals_agndmts.append({
                 'profissional': profissional.name,
-                'agendamentos': get_month_agendamentos_per_profissional(profissional.id),
+                'agendamentos': get_agendamentos_from_profissional(profissional.id, interval_query),
             })
     finally:
         db.close()
