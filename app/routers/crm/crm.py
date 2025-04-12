@@ -61,21 +61,22 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
 def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
 
     # mock
-    print('MOCK')
     db = SessionLocal()
     try:
-        for i in range(1, 50):
-            print(i)
+        for i in range(1, 300):
             cliente = Cliente(
                 name=f'Cliente {i}',
                 email=f'email{i}@mail.com',
                 phone=f'000000000{i}',
             )
             db.add(cliente)
+        db.commit()
     except Exception as e:
         print(e)
     finally:
         db.close()
+
+
 
     db = SessionLocal()
     try:
