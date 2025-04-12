@@ -93,7 +93,7 @@
                                 <!-- Previous Page Link -->
                                 <li class="page-item {% if page <= 1 %}disabled{% endif %}">
                                     <a class="page-link"
-                                       href="{{ url_for('clientes', page=page - 1, order_by=order_by, order=order) }}"
+                                       href="{{ url_for('clientes') }}?page={{ page - 1 }}&order_by={{ order_by }}&order={{ order }}"
                                        aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
