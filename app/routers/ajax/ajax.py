@@ -133,7 +133,7 @@ def get_today_agendamentos_count() -> int | None:
         db.close()
 
 
-def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[dict] | None:
+def get_monthly_year_faturamento(current_year=datetime.now().year) -> list | None:
     """
     Função para calcular o faturamento mensal de um ano específico.
     :param current_year:
