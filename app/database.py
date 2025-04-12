@@ -43,6 +43,7 @@ ORDER BY m.mes;
 
     try:
         result = db.execute(text(sql))
-        return result.fetchall()
+        rows = result.fetchall()
+        return [{"mes": row[0], "total": row[1]} for row in rows]
     finally:
         db.close()
