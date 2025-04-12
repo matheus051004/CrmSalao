@@ -17,7 +17,7 @@ Base = declarative_base()
 def create_all_tables():
     Base.metadata.create_all(bind=engine)
 
-
+# funções CRUD
 def get_monthly_clientes_count():
     db = SessionLocal()
 
@@ -38,6 +38,38 @@ SELECT
     COALESCE(c.total, 0) AS total
 FROM meses m
 LEFT JOIN clientes_por_mes c ON m.mes = c.mes
+ORDER BY m.mes;
+    """
+
+    try:
+        result = db.execute(text(sql))
+        rows = result.fetchall()
+        return [{"mes": row[0], "total": row[1]} for row in rows]
+    finally:
+        db.close()
+
+
+
+def get_monthly_agendamentos_count():
+    db = SessionLocal()
+
+    sql = """
+    WITH meses AS (
+    SELECT generate_series(1, 12) AS mes
+),
+agendamentos_por_mes AS (
+    SELECT 
+        EXTRACT(MONTH FROM created_at)::int AS mes,
+        COUNT(*) AS total
+    FROM agendamentos
+    WHERE EXTRACT(YEAR FROM created_at) = 2025 AND (status = 'agendado' OR status = 'concluido')
+    GROUP BY mes
+)
+SELECT 
+    m.mes,
+    COALESCE(c.total, 0) AS total
+FROM meses m
+LEFT JOIN agendamentos_por_mes c ON m.mes = c.mes
 ORDER BY m.mes;
     """
 
