@@ -154,7 +154,7 @@ def get_monthly_year_faturamento(current_year=datetime.now().year) -> list | Non
             for agendamento in agendamentos:
                 for servico_id in agendamento['servicos']:
                     servico = db.query(Servico).filter_by(id=servico_id).first()
-                    faturamento += servico.price
+                    faturamento += float(servico.price)
 
             months_faturamento.append(faturamento)
         finally:
