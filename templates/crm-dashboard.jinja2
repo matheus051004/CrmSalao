@@ -89,7 +89,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <div class="stat-value">R$ 0</div>
+                            <div class="stat-value">R$ <span id="month_faturamento"></span></div>
                             <div class="stat-label">Faturamento do Mês</div>
                         </div>
                         <div class="stat-icon">
@@ -154,6 +154,10 @@
                 document.getElementById('clientes_count').innerHTML = data.clientes_count
                 document.getElementById('clientes_mes_count').innerHTML = data.clientes_mes_count
                 document.getElementById('today_agendamentos').innerHTML = data.today_agendamentos
+                document.getElementById('month_faturamento').innerHTML = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(data.month_faturamento)
                 charts(data)
             })()
         })
