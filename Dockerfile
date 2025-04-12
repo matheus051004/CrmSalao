@@ -18,7 +18,7 @@ ENV POSTGRES_HOST="209.145.51.166"
 ENV POSTGRES_PORT="5432"
 ENV POSTGRES_USER="postgres"
 ENV POSTGRES_PASSWORD="e3121c21-dfd5-42c3-bc74-5e71dad28c91"
-ENV POSTGRES_DB="postgres"
+ENV POSTGRES_DB="salao-crm"
 
 
 # Copiar todo o código da aplicação
