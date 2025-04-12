@@ -44,7 +44,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <div id="clientes_count" class="stat-value"></div>
+                            <div id="clientes_count" class="stat-value">Aguarde...</div>
                             <div class="stat-label">Total de Clientes</div>
                         </div>
                         <div class="stat-icon">
@@ -59,8 +59,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <div class="stat-value">43</div>
-                            <div class="stat-label">Leads Novos</div>
+                            <div id="clientes_mes_count" class="stat-value">Aguarde...</div>
+                            <div class="stat-label">Clientes últimos 30 dias</div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-user-plus"></i>
@@ -132,6 +132,7 @@
             (async () => {
                 const data = await res.json()
                 document.getElementById('clientes_count').innerHTML = data.clientes_count
+                document.getElementById('clientes_mes_count').innerHTML = data.clientes_mes_count
             })()
         })
     })
