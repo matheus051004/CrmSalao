@@ -21,7 +21,7 @@ async def dashboard(request: Request):
     })
 
 @router.get('/clientes', name='clientes', response_class=HTMLResponse)
-async def dashboard(request: Request):
+async def clientes(request: Request):
     return g.templates.TemplateResponse('crm-clientes.jinja2', {
         'request': request,
         'sidebar': 'clientes',
