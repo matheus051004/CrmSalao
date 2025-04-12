@@ -11,6 +11,6 @@ class Profissional(Base):
     calendar_id = Column(String, nullable=True)
     phone = Column(String, nullable=True)
     services = Column(JSONB, default=[])
-    sexo = Column(String(10), nullable=False, default='masculino')
+    sexo = Column(String, nullable=False, default='masculino')
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
