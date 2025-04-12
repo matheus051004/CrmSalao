@@ -32,21 +32,6 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
     if per_page not in valid_per_page_values:
         per_page = 10
 
-    # mock
-    db = SessionLocal()
-    try:
-        for i in range(1, 200):
-            cliente = Cliente(
-                name=f'Cliente {i}',
-                email=f'email{i}@mail.com',
-                phone=f'000000000{i}',
-            )
-            db.add(cliente)
-    except Exception as e:
-        print(e)
-    finally:
-        db.close()
-
     # Get clients with pagination
     items, total, _ = get_clients(order_by=order_by, order=order, page=page, per_page=per_page)
 
@@ -74,6 +59,22 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
 
 # db functions
 def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
+
+    # mock
+    db = SessionLocal()
+    try:
+        for i in range(1, 200):
+            cliente = Cliente(
+                name=f'Cliente {i}',
+                email=f'email{i}@mail.com',
+                phone=f'000000000{i}',
+            )
+            db.add(cliente)
+    except Exception as e:
+        print(e)
+    finally:
+        db.close()
+
     db = SessionLocal()
     try:
         query = db.query(Cliente).order_by(getattr(Cliente, order_by).desc() if order == 'desc' else getattr(Cliente, order_by))
