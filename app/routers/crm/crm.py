@@ -42,6 +42,8 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
                 phone=f'000000000{i}',
             )
             db.add(cliente)
+    except Exception as e:
+        print(e)
     finally:
         db.close()
 
