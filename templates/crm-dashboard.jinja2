@@ -281,6 +281,7 @@
         });
     }
 
+    let profissionalsAgendamentosChart = null
     function profissionalsAgendamentos(query_interval = 'month') {
         fetch('{{ url_for('pa-graph') }}?query_interval='.replace('http', 'https') + query_interval).then(res => {
             (async () => {
@@ -288,7 +289,12 @@
 
                 //chart
                 const paCtx = document.getElementById('profissionalsAgendamentosChart').getContext('2d');
-                new Chart(paCtx, {
+
+                if (profissionalsAgendamentosChart) {
+                    profissionalsAgendamentosChart.destroy();
+                }
+
+                profissionalsAgendamentosChart = new Chart(paCtx, {
                     type: 'doughnut',
                     data: {
                         labels: data.map((item) => {
