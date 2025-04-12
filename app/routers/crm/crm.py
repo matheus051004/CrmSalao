@@ -15,7 +15,7 @@ async def crm(request: Request):
 
 @router.get('/dashboard', name='dashboard', response_class=HTMLResponse)
 async def dashboard(request: Request):
-    return g.templates.TemplateResponse('crm.jinja2', {
+    return g.templates.TemplateResponse('crm-dashboard.jinja2', {
         'request': request,
         'sidebar': 'dashboard',
     })

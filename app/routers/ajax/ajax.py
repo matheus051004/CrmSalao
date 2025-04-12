@@ -5,7 +5,7 @@ router = APIRouter(
     tags=["ajax"]
 )
 
-@router.get('/dashboard')
+@router.get('/dashboard', name='ajax-dashboard')
 async def dashboard():
     return {
         'status': 'ok',
