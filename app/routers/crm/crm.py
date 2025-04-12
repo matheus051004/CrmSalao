@@ -33,17 +33,17 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
         per_page = 10
 
     # mock
-    for i in range(1, 200):
-        db = SessionLocal()
-        try:
+    db = SessionLocal()
+    try:
+        for i in range(1, 200):
             cliente = Cliente(
                 name=f'Cliente {i}',
                 email=f'<EMAIL>',
                 phone=f'<PHONE>',
             )
             db.add(cliente)
-        finally:
-            db.close()
+    finally:
+        db.close()
 
     # Get clients with pagination
     items, total, _ = get_clients(order_by=order_by, order=order, page=page, per_page=per_page)
