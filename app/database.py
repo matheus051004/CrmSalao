@@ -20,8 +20,7 @@ def create_all_tables():
     Base.metadata.create_all(bind=engine)
 
 # funções CRUD
-def get_monthly_clientes_count():
-    current_year = datetime.now().year
+def get_monthly_clientes_count(current_year = datetime.now().year):
     db = SessionLocal()
 
     sql = f"""
@@ -51,8 +50,7 @@ ORDER BY m.mes;
     finally:
         db.close()
 
-def get_monthly_agendamentos_count():
-    current_year = datetime.now().year
+def get_monthly_agendamentos_count(current_year = datetime.now().year):
     db = SessionLocal()
 
     sql = f"""
