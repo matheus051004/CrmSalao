@@ -126,7 +126,7 @@
                         </select>
                     </div>
                     <div class="chart-container">
-                        <canvas id="leadStatusChart"></canvas>
+                        <canvas id="profissionalsAgendamentosChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -158,12 +158,12 @@
                     style: 'currency',
                     currency: 'BRL'
                 }).format(data.month_faturamento)
-                charts(data)
+                barCharts(data)
             })()
         })
     })
 
-    function charts(data) {
+    function barCharts(data) {
         // clientes chart
         const clientesCtx = document.getElementById('clientesChart').getContext('2d');
         const clientesChart = new Chart(clientesCtx, {
@@ -280,6 +280,56 @@
             }
         });
     }
+
+    function profissionalsAgendamentos(query_interval = 'month') {
+        fetch('{{ url_for('pa-graph') }}?query_interval=' + query_interval).then(res => {
+            (async () => {
+                const data = await res.json()
+
+                //chart
+                const paCtx = document.getElementById('profissionalsAgendamentosChart').getContext('2d');
+                new Chart(paCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.map((item) => {
+                            return item.profissional
+                        }),
+                        datasets: [{
+                            data: data.map(item => {
+                                return item.agendamentos.length
+                            }),
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(255, 99, 132, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 206, 86)',
+                                'rgb(75, 192, 192)',
+                                'rgb(153, 102, 255)',
+                                'rgb(255, 99, 132)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            })()
+        })
+    }
+
+    profissionalsAgendamentos()
 </script>
 </body>
 </html>

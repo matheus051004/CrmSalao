@@ -54,7 +54,6 @@ async def dashboard():
             'monthly_faturamento': get_monthly_year_faturamento(),
             'monthly_faturamento_previsto': get_monthly_year_faturamento_previsto(),
             'month_faturamento': get_month_faturamento(),
-            'profissionals_agendamentos': get_agendamentos_from_all_profissionals(),
         }
     finally:
         db.close()
