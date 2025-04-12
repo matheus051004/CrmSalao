@@ -22,6 +22,7 @@ async def dashboard():
         clientes_mes_count = db.execute(
             text("SELECT COUNT(*) FROM clientes WHERE created_at >= NOW() - INTERVAL '1 month'")).scalar()
         today_agendamentos = get_today_agendamentos_count()
+        get_monthly_faturamento()
         return {
             'clientes_count': clientes_count,
             'clientes_mes_count': clientes_mes_count,
@@ -129,3 +130,17 @@ def get_today_agendamentos_count() -> int | None:
         return result.scalar()
     finally:
         db.close()
+
+
+def get_monthly_faturamento(current_year=datetime.now().year) -> list[dict] | None:
+    for month in range(1, 13):
+        db = SessionLocal()
+        sql = f"""
+            SELECT * FROM agendamentos WHERE status = 'concluido' AND EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year}
+        """
+        try:
+            result = db.execute(text(sql))
+            agendamentos = result.mappings()
+            print(agendamentos)
+        finally:
+            db.close()
