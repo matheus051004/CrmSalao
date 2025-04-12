@@ -38,8 +38,8 @@ async def clientes(request: Request, page: int = 1, order_by: str = 'id', order:
         for i in range(1, 200):
             cliente = Cliente(
                 name=f'Cliente {i}',
-                email=f'<EMAIL>',
-                phone=f'<PHONE>',
+                email=f'email{i}@mail.com',
+                phone=f'000000000{i}',
             )
             db.add(cliente)
     finally:
