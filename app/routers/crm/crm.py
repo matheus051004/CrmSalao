@@ -1,3 +1,5 @@
+import math
+
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
@@ -24,12 +26,21 @@ async def dashboard(request: Request):
 
 @router.get('/clientes', name='clientes', response_class=HTMLResponse)
 async def clientes(request: Request, page: int = 1, order_by: str = 'id', order: str = 'asc'):
-    items, total = get_clients(order_by=order_by, order=order, page=page)
+    # Get per_page from the db function result
+    items, total, per_page = get_clients(order_by=order_by, order=order, page=page)
+
+    # Calculate total pages
+    total_pages = math.ceil(total / per_page)
+
     return g.templates.TemplateResponse('crm-clientes.jinja2', {
         'request': request,
         'sidebar': 'clientes',
         'items': items,
         'total': total,
+        'page': page,
+        'total_pages': total_pages, # Pass total_pages to the template
+        'order_by': order_by,       # Pass sorting parameters for link generation
+        'order': order,
     })
 
 
@@ -40,6 +51,7 @@ def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_pag
         query = db.query(Cliente).order_by(getattr(Cliente, order_by).desc() if order == 'desc' else getattr(Cliente, order_by))
         total = query.count()
         items = query.offset((page - 1) * per_page).limit(per_page).all()
-        return items, total
+        # Return per_page along with items and total
+        return items, total, per_page
     finally:
         db.close()
