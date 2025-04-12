@@ -169,7 +169,7 @@
         const clientesChart = new Chart(clientesCtx, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Outubro', 'Nov', 'Dez'],
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
                 datasets: [{
                     label: 'Clientes',
                     data: [data.clientes_jan, data.clientes_feb, data.clientes_mar, data.clientes_apr, data.clientes_may, data.clientes_jun, data.clientes_jul, data.clientes_aug, data.clientes_sep, data.clientes_oct, data.clientes_nov, data.clientes_dec],
@@ -189,7 +189,26 @@
                 maintainAspectRatio: false,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return Number(value).toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += Number(context.parsed.y).toLocaleString('pt-BR');
+                                return label;
+                            }
+                        }
                     }
                 }
             }
