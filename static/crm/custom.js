@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusChart = new Chart(statusCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Novos', 'Em contato', 'Agendados', 'Convertidos', 'Perdidos'],
+            labels: ['---', '---', '---', '---', '---'],
             datasets: [{
                 data: [35, 15, 20, 25, 5],
                 backgroundColor: [
