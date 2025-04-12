@@ -128,7 +128,7 @@
 {% include 'parts/foot.jinja2' %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        fetch('{{ url_for('ajax-dashboard') }}').then(res => {
+        fetch('{{ url_for('ajax-dashboard') }}'.replace('http', 'https')).then(res => {
 
         })
     })
