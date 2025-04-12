@@ -141,6 +141,6 @@ def get_monthly_faturamento(current_year=datetime.now().year) -> list[dict] | No
         try:
             result = db.execute(text(sql))
             agendamentos = result.mappings()
-            print(agendamentos)
+            print(agendamentos.fetchone())
         finally:
             db.close()
