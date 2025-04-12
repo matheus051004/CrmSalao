@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter
 from sqlalchemy import text
 
-from app import Servico
+from app import Servico, Profissional
 from app.database import SessionLocal
 from app.models.cliente import Cliente
 
@@ -54,6 +54,7 @@ async def dashboard():
             'monthly_faturamento': get_monthly_year_faturamento(),
             'monthly_faturamento_previsto': get_monthly_year_faturamento_previsto(),
             'month_faturamento': get_month_faturamento(),
+            'profissionals_agendamentos': get_agendamentos_from_all_profissionals(),
         }
     finally:
         db.close()
@@ -219,3 +220,44 @@ def get_month_faturamento(month=datetime.now().month, current_year=datetime.now(
         return faturamento
     finally:
         db.close()
+
+
+def get_month_agendamentos_per_profissional(profissional_id: int, month=datetime.now().month,
+                                                  current_year=datetime.now().year) -> list[dict] | None:
+    """
+    Função para obter agendamentos de um profissional em um mês específico.
+    :param profissional_id: ID do profissional
+    :param month:
+    :param current_year:
+    :return:
+    """
+    db = SessionLocal()
+    sql = f"""
+        SELECT * FROM agendamentos WHERE EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year} AND profissional_id = {profissional_id}
+    """
+    try:
+        result = db.execute(text(sql))
+        agendamentos = [dict(row._mapping) for row in result.fetchall()]
+        return agendamentos
+    finally:
+        db.close()
+
+def get_agendamentos_from_all_profissionals() -> list[dict] | None:
+    """
+    Função para obter agendamentos de todos os profissionais no mês atual.
+    :return:
+    """
+    profissionals_agndmts = []
+    db = SessionLocal()
+    try:
+        profissionals = db.query(Profissional).all()
+
+        for profissional in profissionals:
+            profissionals_agndmts.append({
+                'profissional': profissional.name,
+                'agendamentos': get_month_agendamentos_per_profissional(profissional.id),
+            })
+    finally:
+        db.close()
+
+    return profissionals_agndmts
