@@ -119,10 +119,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title mb-0">Agendamentos por profissional</h5>
-                        <select class="form-select form-select-sm" style="width: auto;" id="periodoFilter">
-                            <option value="dia">Diário</option>
-                            <option value="semana">Semanal</option>
-                            <option value="mes" selected>Mensal</option>
+                        <select onselect="profissionalsAgendamentos(this.value)" class="form-select form-select-sm" style="width: auto;" id="periodoFilter">
+                            <option value="day">Diário</option>
+                            <option value="week">Semanal</option>
+                            <option value="month" selected>Mensal</option>
                         </select>
                     </div>
                     <div class="chart-container">
