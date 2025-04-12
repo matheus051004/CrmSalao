@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Column, Integer, String, DateTime, func, JSON
 
 from app.database import Base
 
@@ -6,7 +6,7 @@ from app.database import Base
 class Agendamento(Base):
     __tablename__ = 'agendamentos'
     id = Column(Integer, primary_key=True, index=True)
-    servico_id = Column(Integer, nullable=False)
+    servicos = Column(JSON, nullable=False)
     cliente_id = Column(Integer, nullable=False)
     profissional_id = Column(Integer, nullable=False)
     start = Column(DateTime, nullable=False)
