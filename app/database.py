@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
@@ -16,3 +16,33 @@ Base = declarative_base()
 
 def create_all_tables():
     Base.metadata.create_all(bind=engine)
+
+
+def get_monthly_clientes_count():
+    db = SessionLocal()
+
+    sql = """
+    WITH meses AS (
+    SELECT generate_series(1, 12) AS mes
+),
+clientes_por_mes AS (
+    SELECT 
+        EXTRACT(MONTH FROM created_at)::int AS mes,
+        COUNT(*) AS total
+    FROM clientes
+    WHERE EXTRACT(YEAR FROM created_at) = 2025
+    GROUP BY mes
+)
+SELECT 
+    m.mes,
+    COALESCE(c.total, 0) AS total
+FROM meses m
+LEFT JOIN clientes_por_mes c ON m.mes = c.mes
+ORDER BY m.mes;
+    """
+
+    try:
+        result = db.execute(text(sql))
+        return result.fetchall()
+    finally:
+        db.close()
