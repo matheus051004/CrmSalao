@@ -3,6 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter
 from sqlalchemy import text
 
+from app import Servico
 from app.database import SessionLocal
 from app.models.cliente import Cliente
 
@@ -22,7 +23,7 @@ async def dashboard():
         clientes_mes_count = db.execute(
             text("SELECT COUNT(*) FROM clientes WHERE created_at >= NOW() - INTERVAL '1 month'")).scalar()
         today_agendamentos = get_today_agendamentos_count()
-        get_monthly_faturamento()
+        print(get_monthly_year_faturamento)
         return {
             'clientes_count': clientes_count,
             'clientes_mes_count': clientes_mes_count,
@@ -132,8 +133,16 @@ def get_today_agendamentos_count() -> int | None:
         db.close()
 
 
-def get_monthly_faturamento(current_year=datetime.now().year) -> list[dict] | None:
+def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[dict] | None:
+    """
+    Função para calcular o faturamento mensal de um ano específico.
+    :param current_year:
+    :return:
+    """
+    months_faturamento = []
     for month in range(1, 13):
+        faturamento = 0
+
         db = SessionLocal()
         sql = f"""
             SELECT * FROM agendamentos WHERE status = 'concluido' AND EXTRACT(MONTH FROM created_at) = {month} AND EXTRACT(YEAR FROM created_at) = {current_year}
@@ -141,6 +150,12 @@ def get_monthly_faturamento(current_year=datetime.now().year) -> list[dict] | No
         try:
             result = db.execute(text(sql))
             agendamentos = [dict(row._mapping) for row in result.fetchall()]
-            print(agendamentos)
+
+            for agendamento in agendamentos:
+                for servico_id in agendamento['servicos']:
+                    servico = db.query(Servico).filter_by(id=servico_id).first()
+                    faturamento += servico.price
         finally:
             db.close()
+
+        months_faturamento.append(faturamento)
