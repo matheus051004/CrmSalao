@@ -23,7 +23,7 @@ async def dashboard():
         clientes_mes_count = db.execute(
             text("SELECT COUNT(*) FROM clientes WHERE created_at >= NOW() - INTERVAL '1 month'")).scalar()
         today_agendamentos = get_today_agendamentos_count()
-        print(get_monthly_year_faturamento)
+        print(get_monthly_year_faturamento())
         return {
             'clientes_count': clientes_count,
             'clientes_mes_count': clientes_mes_count,
