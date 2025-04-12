@@ -132,6 +132,18 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Faturamento - Anual</h5>
+                    <div class="chart-container">
+                        <canvas id="faturamentoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% include 'parts/foot.jinja2' %}
 <script>
@@ -148,6 +160,7 @@
     })
 
     function charts(data) {
+        // clientes chart
         const clientesCtx = document.getElementById('clientesChart').getContext('2d');
         const clientesChart = new Chart(clientesCtx, {
             type: 'bar',
@@ -164,6 +177,44 @@
                     data: [data.agendamentos_jan, data.agendamentos_feb, data.agendamentos_mar, data.agendamentos_apr, data.agendamentos_may, data.agendamentos_jun, data.agendamentos_jul, data.agendamentos_aug, data.agendamentos_sep, data.agendamentos_oct, data.agendamentos_nov, data.agendamentos_dec],
                     backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // faturamento chart
+        const faturamentoCtx = document.getElementById('faturamentoChart').getContext('2d');
+        new Chart(faturamentoCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Outubro', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Faturamento',
+                    data: [
+                        data.monthly_faturamento[0],
+                        data.monthly_faturamento[1],
+                        data.monthly_faturamento[2],
+                        data.monthly_faturamento[3],
+                        data.monthly_faturamento[4],
+                        data.monthly_faturamento[5],
+                        data.monthly_faturamento[6],
+                        data.monthly_faturamento[7],
+                        data.monthly_faturamento[8],
+                        data.monthly_faturamento[9],
+                        data.monthly_faturamento[10],
+                        data.monthly_faturamento[11]
+                    ],
+                    backgroundColor: 'rgba(87,235,54,0.5)',
+                    borderColor: 'rgb(99,235,54)',
                     borderWidth: 1
                 }]
             },

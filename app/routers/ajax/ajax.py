@@ -23,7 +23,6 @@ async def dashboard():
         clientes_mes_count = db.execute(
             text("SELECT COUNT(*) FROM clientes WHERE created_at >= NOW() - INTERVAL '1 month'")).scalar()
         today_agendamentos = get_today_agendamentos_count()
-        print(get_monthly_year_faturamento())
         return {
             'clientes_count': clientes_count,
             'clientes_mes_count': clientes_mes_count,
@@ -52,6 +51,7 @@ async def dashboard():
             'agendamentos_nov': monthly_agendamentos_count[10]['total'],
             'agendamentos_dec': monthly_agendamentos_count[11]['total'],
             'today_agendamentos': today_agendamentos,
+            'monthly_faturamento': get_monthly_year_faturamento()
         }
     finally:
         db.close()
@@ -133,7 +133,7 @@ def get_today_agendamentos_count() -> int | None:
         db.close()
 
 
-def get_monthly_year_faturamento(current_year=datetime.now().year) -> list | None:
+def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[float] | None:
     """
     Função para calcular o faturamento mensal de um ano específico.
     :param current_year:
