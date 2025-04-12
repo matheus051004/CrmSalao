@@ -155,7 +155,9 @@ def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[dict]
                 for servico_id in agendamento['servicos']:
                     servico = db.query(Servico).filter_by(id=servico_id).first()
                     faturamento += servico.price
+
+            months_faturamento.append(faturamento)
         finally:
             db.close()
 
-        months_faturamento.append(faturamento)
+    return months_faturamento
