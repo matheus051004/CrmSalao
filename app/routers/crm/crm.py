@@ -63,7 +63,7 @@ def get_clients(order_by: str = 'id', order: str = 'asc', page: int = 1, per_pag
     # mock
     db = SessionLocal()
     try:
-        for i in range(1, 10):
+        for i in range(1, 50):
             cliente = Cliente(
                 name=f'Cliente {i}',
                 email=f'email{i}@mail.com',
