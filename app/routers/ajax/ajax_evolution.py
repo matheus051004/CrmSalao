@@ -30,6 +30,6 @@ async def simple_message(request: Request):
     )
     json_result = result.json()
     return {
-        'status': json_result['status'] if 'status' in json_result else 200,
+        'status': 200 if json_result['status'] == 'PENDING' else 400,
         'message': json_result['error'] if 'error' in json_result else 'Mensagem enviada com sucesso'
     }
