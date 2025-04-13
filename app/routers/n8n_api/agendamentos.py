@@ -2,7 +2,6 @@ from fastapi.routing import APIRouter
 
 agendamentos_router = APIRouter(
     prefix="/agendamentos",
-    tags=["agendamentos"],
     include_in_schema=True,
 )
 
