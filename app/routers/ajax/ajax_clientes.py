@@ -5,7 +5,8 @@ from app.database import SessionLocal
 
 router = APIRouter(
     prefix="/ajax-clientes",
-    tags=["ajax_clientes"]
+    tags=["ajax_clientes"],
+    include_in_schema=False
 )
 
 @router.delete('delete-cliente/{cliente_id}', name='ajax-delete-cliente')

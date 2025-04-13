@@ -9,7 +9,8 @@ from app.models.cliente import Cliente
 
 router = APIRouter(
     prefix="/ajax-dashboard",
-    tags=["ajax-dashboard"]
+    tags=["ajax-dashboard"],
+    include_in_schema=False
 )
 
 

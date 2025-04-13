@@ -10,13 +10,13 @@ router = APIRouter(
     tags=['login']
 )
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def login(request: Request):
     return g.templates.TemplateResponse("login.jinja2", {
         'request': request,
     })
 
-@router.post("/", response_class=HTMLResponse)
+@router.post("/", response_class=HTMLResponse, include_in_schema=False)
 async def login_post(request: Request):
     form = await request.form()
     username = form.get("username").strip()
@@ -49,7 +49,7 @@ async def login_post(request: Request):
         return response
 
 
-@router.get('/logout', response_class=HTMLResponse, name='logout')
+@router.get('/logout', response_class=HTMLResponse, name='logout', include_in_schema=False)
 async def logout(request: Request):
     response = RedirectResponse(url="/login/", status_code=303)
     response.delete_cookie("username")
