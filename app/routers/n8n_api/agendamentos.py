@@ -15,8 +15,8 @@ agendamentos_router = APIRouter(
 
 
 @agendamentos_router.get("/horarios-diponiveis", name="n8n-horarios-diponiveis")
-async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
-    """Retorna os horários disponíveis para agendamentos de um serviço."""
+async def horarios_diponiveis(date: str, profissional_id: int, servicos_ids: List[int]):
+    """Retorna os horários disponíveis para agendamentos de múltiplos serviços."""
     # Validar a data
     sucesso, resultado = validar_data(date)
     if not sucesso:
@@ -27,21 +27,20 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
     db = SessionLocal()
     try:
         # Verificar disponibilidade do profissional
-        sucesso, resultado, profissional, servico = verificar_disponibilidade_profissional(
-            db, profissional_id, servico_id, dia_semana
+        sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
+            db, profissional_id, servicos_ids, dia_semana
         )
         if not sucesso:
             return response(False, resultado)
 
         horarios_do_dia = resultado
-        servico_duration = servico.minutes
 
         # Obter agendamentos existentes
         horarios_ocupados = obter_agendamentos_existentes(db, profissional_id, data)
 
         # Gerar slots disponíveis
         horarios_disponiveis = gerar_slots_disponiveis(
-            data, horarios_do_dia, servico_duration, horarios_ocupados
+            data, horarios_do_dia, duracao_total, horarios_ocupados
         )
 
         return response(True, "Horários disponíveis", horarios_disponiveis)
@@ -51,10 +50,9 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
 
 @agendamentos_router.post("/criar", name="n8n-criar-agendamento")
 async def criar_agendamento(dados: AgendamentoCreate):
-
     cliente_id = dados.cliente_id
     profissional_id = dados.profissional_id
-    servico_id = dados.servico_id
+    servicos_ids = dados.servicos_ids
     date = dados.date
     start_hour = dados.start_hour
     title = dados.title
@@ -69,21 +67,20 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
     db = SessionLocal()
     try:
-        # 1. Verificar se o profissional atende aquele serviço e trabalha naquele dia
-        sucesso, resultado, profissional, servico = verificar_disponibilidade_profissional(
-            db, profissional_id, servico_id, dia_semana
+        # 1. Verificar se o profissional atende todos os serviços e trabalha naquele dia
+        sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
+            db, profissional_id, servicos_ids, dia_semana
         )
         if not sucesso:
             return response(False, resultado)
 
         horarios_do_dia = resultado
-        duracao_servico = servico.minutes
 
         # 2. Verificar se o horário escolhido está dentro do período de trabalho do profissional
         try:
             hora_inicio = datetime.strptime(start_hour, '%H:%M').time()
             inicio_agendamento = datetime.combine(data_obj, hora_inicio)
-            fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_servico)
+            fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_total)
         except ValueError:
             return response(False, "Formato de horário inválido, use HH:MM")
 
@@ -111,14 +108,18 @@ async def criar_agendamento(dados: AgendamentoCreate):
             if inicio_agendamento < ocupado['fim'] and fim_agendamento > ocupado['inicio']:
                 return response(False, "Horário indisponível, já existe agendamento neste período")
 
+        # Preparar nomes dos serviços para o título automático
+        nomes_servicos = ", ".join([servico.name for servico in servicos])
+        titulo_auto = f"Agendamento de {nomes_servicos}"
+
         # Criar o agendamento
         novo_agendamento = Agendamento(
             cliente_id=cliente_id,
             profissional_id=profissional_id,
-            servicos=[servico_id],
+            servicos=servicos_ids,
             start=inicio_agendamento,
             end=fim_agendamento,
-            title=title if title else f"Agendamento de {servico.name}",
+            title=title if title else titulo_auto,
             description=description,
             status="agendado"
         )
@@ -127,34 +128,6 @@ async def criar_agendamento(dados: AgendamentoCreate):
         db.commit()
         db.refresh(novo_agendamento)
 
-        # Se o profissional tiver um calendar_id, pode-se integrar com Google Calendar
-        # if profissional.calendar_id:
-        #     try:
-        #         from app.GoogleCalendarManager import GoogleCalendarManager
-        #
-        #         # Criar evento no Google Calendar
-        #         calendar = GoogleCalendarManager(
-        #             credentials_path='',
-        #             calendar_id=profissional.calendar_id
-        #         )
-        #
-        #         summary = novo_agendamento.title
-        #         event = calendar.create_event(
-        #             summary=summary,
-        #             start_time=novo_agendamento.start,
-        #             end_time=novo_agendamento.end,
-        #             description=novo_agendamento.description
-        #         )
-        #
-        #         # Opcionalmente, poderia salvar o ID do evento do Google Calendar no agendamento
-        #         if event and 'id' in event:
-        #             novo_agendamento.google_event_id = event['id']
-        #             db.commit()
-        #
-        #     except Exception as e:
-        #         # Não interromper o fluxo se falhar a integração com o Calendar
-        #         print(f"Erro ao integrar com Google Calendar: {str(e)}")
-
         return response(
             True,
             "Agendamento criado com sucesso",
@@ -162,7 +135,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
                 "id": novo_agendamento.id,
                 "inicio": novo_agendamento.start.strftime('%Y-%m-%d %H:%M'),
                 "fim": novo_agendamento.end.strftime('%Y-%m-%d %H:%M'),
-                "servico": servico.name,
+                "servicos": nomes_servicos,
                 "profissional": profissional.name
             }
         )
@@ -185,27 +158,38 @@ def validar_data(date_str: str) -> Tuple[bool, Any]:
 
 
 def verificar_disponibilidade_profissional(
-        db, profissional_id: int, servico_id: int, dia_semana: str
-) -> Tuple[bool, Any, Optional[Profissional], Optional[Servico]]:
-    """Verifica se o profissional está disponível para o serviço no dia da semana."""
-    servico = db.query(Servico).filter(Servico.id == servico_id).first()
-    if not servico:
-        return False, "Serviço não encontrado", None, None
+        db, profissional_id: int, servicos_ids: List[int], dia_semana: str
+) -> Tuple[bool, Any, Optional[Profissional], Optional[List[Servico]], Optional[int]]:
+    """
+    Verifica se o profissional está disponível para os serviços no dia da semana.
+    Retorna também a duração total dos serviços.
+    """
+    servicos = []
+    duracao_total = 0
 
     profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
     if not profissional:
-        return False, "Profissional não encontrado", None, None
+        return False, "Profissional não encontrado", None, None, None
 
-    # verificar se o profissional atende o serviço
-    if servico_id not in profissional.services:
-        return False, "Profissional não atende este serviço", None, None
+    # Verificar cada serviço solicitado
+    for servico_id in servicos_ids:
+        servico = db.query(Servico).filter(Servico.id == servico_id).first()
+        if not servico:
+            return False, f"Serviço com ID {servico_id} não encontrado", None, None, None
+
+        # Verificar se o profissional atende o serviço
+        if servico_id not in profissional.services:
+            return False, f"Profissional não atende o serviço: {servico.name}", None, None, None
+
+        servicos.append(servico)
+        duracao_total += servico.minutes
 
     # Verificar se o profissional trabalha neste dia da semana
     horarios_do_dia = profissional.horarios.get(dia_semana, [])
     if not horarios_do_dia:
-        return False, "Profissional não atende neste dia da semana", None, None
+        return False, "Profissional não atende neste dia da semana", None, None, None
 
-    return True, horarios_do_dia, profissional, servico
+    return True, horarios_do_dia, profissional, servicos, duracao_total
 
 
 def obter_agendamentos_existentes(db, profissional_id: int, data: datetime) -> List[Dict]:

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class AgendamentoCreate(BaseModel):
     cliente_id: int
     profissional_id: int
-    servico_id: int
+    servicos_ids: List[int]  # Agora aceita uma lista de serviços
     date: str
     start_hour: str
     title: Optional[str] = None
