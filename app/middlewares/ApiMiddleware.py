@@ -14,9 +14,14 @@ class ApiMiddleware(BaseHTTPMiddleware):
         if not needs_auth:
             response = await call_next(request)
             return response
+        if 'apiKey' not in request.headers:
+            return {
+                "status": "error",
+                "message": "Unauthorized",
+                "code": 401
+            }
 
         api_key = request.headers.get('apiKey')
-
         if not api_key or api_key != os.environ.get('API_KEY'):
             return {
                 "status": "error",
