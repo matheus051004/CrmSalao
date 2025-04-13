@@ -18,7 +18,7 @@ def get_servico(service_id: int):
 
     db = SessionLocal()
     try:
-        servico = db.query().filter(Servico.id == service_id).first()
+        servico = db.query(Servico).filter(Servico.id == service_id).first()
         if servico:
             return servico
 
@@ -39,7 +39,7 @@ def get_cliente(cliente_id: int):
 
     db = SessionLocal()
     try:
-        cliente = db.query().filter(Cliente.id == cliente_id).first()
+        cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
         if cliente:
             return cliente
 
@@ -58,7 +58,7 @@ def get_profissional(profissional_id: int):
 
     db = SessionLocal()
     try:
-        profissional = db.query().filter(Profissional.id == profissional_id).first()
+        profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
         if profissional:
             return profissional
 
