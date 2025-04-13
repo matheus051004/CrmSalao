@@ -6,7 +6,8 @@ import app.glob as g
 
 router = APIRouter(
     prefix="/dashboard",
-    tags=["dashboard"]
+    tags=["dashboard"],
+    include_in_schema=False
 )
 
 
