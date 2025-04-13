@@ -1,7 +1,6 @@
 from fastapi.routing import APIRouter
 
 from app import Servico, Profissional
-from app.routers.n8n_api import response
 from app.database import SessionLocal
 
 from app.models.agendamentos import Agendamento
@@ -100,3 +99,14 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
 
     finally:
         db.close()
+
+
+def response(success=True, message="", data=None):
+    """
+    Formata a resposta da API.
+    """
+    return {
+        "success": success,
+        "message": message,
+        "data": data
+    }
