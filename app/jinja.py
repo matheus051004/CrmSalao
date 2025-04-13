@@ -87,10 +87,10 @@ def get_profissional(profissional_id: int):
         db.close()
 
 
-def reformat_date_time(date: datetime) -> str:
+def reformat_date_time(date: datetime, new_format = '%d/%m/%Y %H:%M') -> str:
     """
     Reformat a date string from 'YYYY-MM-DD HH:MM' to 'DD/MM/YYYY HH:MM'.
     """
     if date:
-        return date.strftime('%d/%m/%Y %H:%M')
+        return date.strftime(new_format)
     return ''
