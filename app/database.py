@@ -26,7 +26,7 @@ Base = declarative_base()
 # setar fuso horário padrão do db
 db = SessionLocal()
 try:
-    db.execute(text(f"ALTER DATABASE {DATABASE_NAME} SET TIMEZONE TO 'America/Sao_Paulo';"))
+    db.execute(text(f"ALTER DATABASE \"{DATABASE_NAME}\" SET TIMEZONE TO 'America/Sao_Paulo';"))
 finally:
     db.close()
 
