@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
@@ -22,6 +22,13 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+# setar fuso horário padrão do db
+db = SessionLocal()
+try:
+    db.execute(text(f"ALTER DATABASE {DATABASE_NAME} SET TIMEZONE TO 'America/Sao_Paulo';"))
+finally:
+    db.close()
 
 def create_all_tables():
     Base.metadata.create_all(bind=engine)
