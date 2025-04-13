@@ -14,7 +14,7 @@ from app.routers.crm import crm_agendamentos
 from app.routers.crm import crm_clientes
 from app.routers.crm import crm_dashboard
 
-from app.routers.n8n_api.agendamentos import agendamentos_router
+from app.routers.n8n_api import n8n_api_router
 
 app = FastAPI(title="CRM n8n", description="CRM n8n", version="0.1.0")
 app.mount('/static', StaticFiles(directory="./static"), name="static")
@@ -30,7 +30,7 @@ app.include_router(crm_agendamentos.router)
 app.include_router(ajax_dashboard.router)
 app.include_router(ajax_evolution.router)
 app.include_router(ajax_clientes.router)
-app.include_router(agendamentos_router)
+app.include_router(n8n_api_router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
