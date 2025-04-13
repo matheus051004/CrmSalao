@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from fastapi.templating import Jinja2Templates
 
@@ -11,6 +12,7 @@ def prepare_jinja(templates: Jinja2Templates):
     templates.env.globals['get_cliente'] = get_cliente
     templates.env.globals['get_profissional'] = get_profissional
     templates.env.globals['get_servicos_string'] = get_servicos_string
+    templates.env.globals['reformat_date_time'] = reformat_date_time
 
 
 def get_servico(service_id: int):
@@ -83,3 +85,12 @@ def get_profissional(profissional_id: int):
         )
     finally:
         db.close()
+
+
+def reformat_date_time(date: datetime) -> str:
+    """
+    Reformat a date string from 'YYYY-MM-DD HH:MM' to 'DD/MM/YYYY HH:MM'.
+    """
+    if date:
+        return date.strftime('%d/%m/%Y %H:%M')
+    return ''
