@@ -253,7 +253,9 @@
                     const json = await res.json()
                     if (json.status === 200) {
                         notyf.success(json.message);
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
                     } else {
                         notyf.error('Erro ao excluir cliente: ' + json.message);
                     }
