@@ -192,26 +192,17 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
-    function deleteCliente(url) {
-        const notyf = new Notyf();
-        if (confirm('Tem certeza que deseja excluir este cliente?\n\n - Todos os dados relacionados a ele serão excluídos.\n - Esta ação não pode ser desfeita.')) {
-            fetch(url.replace('http', 'https'), {
-                method: 'DELETE',
-            }).then(res => {
-                (async () => {
-                    const json = await res.json()
-                    if (json.status === 200) {
-                        notyf.success(json.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        notyf.error('Erro ao excluir cliente: ' + json.message);
-                    }
-                })()
-            })
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Select All Checkboxes
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+
+        selectAllCheckbox.addEventListener('change', function () {
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+    });
 </script>
 </body>
 </html>
