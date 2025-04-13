@@ -1,25 +1,22 @@
-import os
-
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
 import app.glob as glob
+from app.database import create_all_tables
 from app.jinja import prepare_jinja
-
-from app.routers.auth import login
-from app.routers.crm import crm_dashboard
-from app.routers.crm import crm_clientes
-from app.routers.crm import crm_agendamentos
-
+from app.middlewares.AuthMiddleware import AuthMiddleware
+from app.routers.ajax import ajax_clientes
 from app.routers.ajax import ajax_dashboard
 from app.routers.ajax import ajax_evolution
-from app.routers.ajax import ajax_clientes
+from app.routers.auth import login
+from app.routers.crm import crm_agendamentos
+from app.routers.crm import crm_clientes
+from app.routers.crm import crm_dashboard
 
-from app.database import create_all_tables
+from app.routers.n8n_api.agendamentos import agendamentos_router
 
-from app.middlewares.AuthMiddleware import AuthMiddleware
-
-app = FastAPI(title="FastAPI Example", description="A simple FastAPI example")
+app = FastAPI(title="CRM n8n", description="CRM n8n", version="0.1.0")
 app.mount('/static', StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="./templates")
 
@@ -33,6 +30,7 @@ app.include_router(crm_agendamentos.router)
 app.include_router(ajax_dashboard.router)
 app.include_router(ajax_evolution.router)
 app.include_router(ajax_clientes.router)
+app.include_router(agendamentos_router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
