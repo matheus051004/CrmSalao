@@ -101,13 +101,16 @@
                                         <td>{{ item.email }}</td>
                                         <td>{{ item.phone }}</td>
                                         <td>
-                                            <a href="https://wa.me/{{ item.phone }}" class="btn btn-sm btn-success"><i
-                                                    class="fa-brands fa-whatsapp"></i></a>
-                                            <a href="mailto:{{ item.email }}" class="btn btn-sm btn-dark"><i
-                                                    class="fas fa-envelope"></i></a>
-                                            <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                               data-bs-target="#deleteModal"><i
-                                                    class="fas fa-trash"></i></a>
+                                            <a href="javascript:void(0)" onclick="whatsappModal('{{ item.name }}', '{{ item.phone }}')"
+                                               class="btn btn-sm btn-success send-whatsapp-message">
+                                                <i class="fa-brands fa-whatsapp"></i>
+                                            </a>
+                                            <a href="mailto:{{ item.email }}" class="btn btn-sm btn-dark">
+                                                <i class="fas fa-envelope"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -190,5 +193,34 @@
 </div> <!-- main-content end -->
 
 {% include 'parts/foot.jinja2' %}
+
+<script>
+    function whatsappModal(name, phone) {
+        const whatsappModal = new bootstrap.Modal(document.getElementById('whatsappModal'));
+        document.querySelector('#whatsappModal .cliente-name').textContent = name;
+        whatsappModal.show();
+    }
+</script>
+
+<!-- Modal whatsapp -->
+<div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="whatsappModalLabel">Enviar mensagem para: <span class="cliente-name"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="clientPhone">
+                <textarea class="form-control" id="whatsappMessage" placeholder="Digite sua mensagem aqui..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="confirmSend">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
