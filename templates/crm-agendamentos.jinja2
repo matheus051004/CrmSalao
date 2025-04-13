@@ -98,7 +98,7 @@
                                             {% endif %}
                                         </td>
                                         <td>{{ item.servicos }}</td>
-                                        <td>{{ item.cliente_id }}</td>
+                                        <td>{{ get_cliente(item.cliente_id).name }}</td>
                                         <td>{{ item.profissional_id }}</td>
                                         <td>{{ item.start }}</td>
                                         <td>{{ item.end }}</td>
