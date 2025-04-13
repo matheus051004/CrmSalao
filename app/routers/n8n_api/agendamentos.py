@@ -15,8 +15,12 @@ agendamentos_router = APIRouter(
 
 
 @agendamentos_router.get("/horarios-diponiveis", name="n8n-horarios-diponiveis")
-async def horarios_diponiveis(date: str, profissional_id: int, servicos_ids: List[int]):
-    """Retorna os horários disponíveis para agendamentos de múltiplos serviços."""
+async def horarios_diponiveis(date: str, profissional_id: int, servicos_ids: str):
+    """Retorna os horários disponíveis para agendamentos de múltiplos serviços.
+    :arg date: Data do agendamento no formato YYYY-MM-DD
+    :arg profissional_id: ID do profissional
+    :arg servicos_ids: IDs dos serviços separados por vírgula
+    """
     # Validar a data
     sucesso, resultado = validar_data(date)
     if not sucesso:
@@ -25,6 +29,7 @@ async def horarios_diponiveis(date: str, profissional_id: int, servicos_ids: Lis
     data, dia_semana = resultado
 
     db = SessionLocal()
+    servicos_ids = [int(idd.strip()) for idd in servicos_ids.split(",")]
     try:
         # Verificar disponibilidade do profissional
         sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
