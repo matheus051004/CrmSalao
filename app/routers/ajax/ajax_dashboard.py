@@ -8,8 +8,8 @@ from app.database import SessionLocal
 from app.models.cliente import Cliente
 
 router = APIRouter(
-    prefix="/ajax",
-    tags=["ajax"]
+    prefix="/ajax-dashboard",
+    tags=["ajax-dashboard"]
 )
 
 
