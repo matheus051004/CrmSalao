@@ -6,10 +6,21 @@ agendamentos_router = APIRouter(
 )
 
 @agendamentos_router.get("/horarios-diponiveis", name="n8n-horarios-diponiveis")
-async def horarios_diponiveis(date: str):
+async def horarios_diponiveis(date: str = '2023-10-01'):
     """
     Retorna os horários disponíveis para agendamentos.
     """
+
+    # validar formato
+    try:
+        from datetime import datetime
+        datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return {
+            "status": "error",
+            "message": "Formato de data inválido. Use YYYY-MM-DD."
+        }
+
     return {
         "status": "success",
         "message": "Horários disponíveis retornados com sucesso.",
