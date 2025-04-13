@@ -2,6 +2,7 @@ import os
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 
 
 class ApiMiddleware(BaseHTTPMiddleware):
@@ -14,20 +15,29 @@ class ApiMiddleware(BaseHTTPMiddleware):
         if not needs_auth:
             response = await call_next(request)
             return response
+
         if 'apiKey' not in request.headers:
-            return {
-                "status": "error",
-                "message": "Unauthorized",
-                "code": 401
-            }
+            from fastapi.responses import JSONResponse
+            return JSONResponse(
+                content={
+                    "status": "error",
+                    "message": "Unauthorized",
+                    "code": 401
+                },
+                status_code=401
+            )
 
         api_key = request.headers.get('apiKey')
         if not api_key or api_key != os.environ.get('API_KEY'):
-            return {
-                "status": "error",
-                "message": "Unauthorized",
-                "code": 401
-            }
+            from fastapi.responses import JSONResponse
+            return JSONResponse(
+                content={
+                    "status": "error",
+                    "message": "Unauthorized",
+                    "code": 401
+                },
+                status_code=401
+            )
 
         response = await call_next(request)
         return response
