@@ -43,6 +43,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Adiciona um listener para o botão de deletar
+    const deleteButtons = document.querySelectorAll('.btn-danger[data-bs-toggle="modal"]');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        });
+    });
+
     // Ajusta os gráficos ao redimensionar a janela
     window.addEventListener('resize', function () {
         leadsChart.resize();
