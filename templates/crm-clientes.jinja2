@@ -207,7 +207,7 @@
         document.querySelector('#whatsappModal #confirmSend2').onclick = function () {
             const message = document.querySelector('#whatsappModal #whatsappMessage').value;
             const formData = new FormData();
-            formData.append('phone', phone);
+            formData.append('number', phone);
             formData.append('message', message);
 
             fetch('{{ url_for('ajax-evo-simple-message') }}'.replace('http', 'https'), {
