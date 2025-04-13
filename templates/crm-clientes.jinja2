@@ -218,7 +218,7 @@
                     const json = await res.json()
                     const notyf = new Notyf();
                     if (json.status === 200) {
-                        notyf.success('Mensagem enviada com sucesso!');
+                        notyf.success(json.message);
                     } else {
                         notyf.error('Erro ao enviar mensagem: ' + json.message);
                     }
