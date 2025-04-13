@@ -65,6 +65,14 @@
                             <thead>
                             <tr>
                                 <th scope="col">
+                                    <a href="{{ url_for('clientes') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
+                                        ID
+                                        {% if order_by == 'id' %}
+                                            <i class="fas fa-sort-{{ 'up' if order == 'asc' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th scope="col">
                                     <a href="{{ url_for('clientes') }}?page={{ page }}&per_page={{ per_page }}&order_by=name&order={{ 'asc' if order_by == 'name' and order == 'desc' else 'desc' }}">
                                         Nome
                                         {% if order_by == 'name' %}
@@ -88,6 +96,7 @@
                             {% if items %}
                                 {% for item in items %}
                                     <tr>
+                                        <td>{{ item.id }}</td>
                                         <td>{{ item.name }}</td>
                                         <td>{{ item.email }}</td>
                                         <td>{{ item.phone }}</td>
