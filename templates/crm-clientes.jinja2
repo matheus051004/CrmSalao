@@ -189,34 +189,6 @@
     </div> <!-- row end -->
 </div> <!-- main-content end -->
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar Deleção</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Tem certeza de que deseja deletar este cliente?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Deletar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% include 'parts/foot.jinja2' %}
 </body>
-<script>
-    const deleteButtons = document.querySelectorAll('.btn-danger[data-bs-toggle="modal"]');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
-        });
-    });
-</script>
 </html>
