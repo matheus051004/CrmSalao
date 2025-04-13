@@ -30,9 +30,13 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
         if not servico:
             return response(False, "Serviço não encontrado")
 
-        profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
+        profissional:Profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
         if not profissional:
             return response(False, "Profissional não encontrado")
+
+        # verificar se o profissional atende o serviço
+        if servico_id not in profissional.services:
+            return response(False, "Profissional não atende este serviço")
 
         servico_duration = servico.minutes
 
