@@ -48,6 +48,142 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
         db.close()
 
 
+@agendamentos_router.post("/criar", name="n8n-criar-agendamento")
+async def criar_agendamento(
+        cliente_id: int,
+        profissional_id: int,
+        servico_id: int,
+        data: str,
+        horario_inicio: str,
+        title: str = None,
+        description: str = None
+):
+    """
+    Cria um novo agendamento de serviço com as devidas validações.
+
+    Args:
+        cliente_id: ID do cliente
+        profissional_id: ID do profissional
+        servico_id: ID do serviço
+        data: Data do agendamento (YYYY-MM-DD)
+        horario_inicio: Horário de início (HH:MM)
+        title: Título do agendamento (opcional)
+        description: Descrição do agendamento (opcional)
+    """
+    # Validar a data
+    sucesso, resultado = validar_data(data)
+    if not sucesso:
+        return response(False, resultado)
+
+    data_obj, dia_semana = resultado
+
+    db = SessionLocal()
+    try:
+        # 1. Verificar se o profissional atende aquele serviço e trabalha naquele dia
+        sucesso, resultado, profissional, servico = verificar_disponibilidade_profissional(
+            db, profissional_id, servico_id, dia_semana
+        )
+        if not sucesso:
+            return response(False, resultado)
+
+        horarios_do_dia = resultado
+        duracao_servico = servico.minutes
+
+        # 2. Verificar se o horário escolhido está dentro do período de trabalho do profissional
+        try:
+            hora_inicio = datetime.strptime(horario_inicio, '%H:%M').time()
+            inicio_agendamento = datetime.combine(data_obj, hora_inicio)
+            fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_servico)
+        except ValueError:
+            return response(False, "Formato de horário inválido, use HH:MM")
+
+        # Verificar se está no horário de atendimento do profissional
+        horario_valido = False
+        for periodo in horarios_do_dia:
+            hora_inicio_periodo = datetime.strptime(periodo['inicio'], '%H:%M').time()
+            hora_fim_periodo = datetime.strptime(periodo['fim'], '%H:%M').time()
+
+            inicio_periodo = datetime.combine(data_obj, hora_inicio_periodo)
+            fim_periodo = datetime.combine(data_obj, hora_fim_periodo)
+
+            if inicio_agendamento >= inicio_periodo and fim_agendamento <= fim_periodo:
+                horario_valido = True
+                break
+
+        if not horario_valido:
+            return response(False, "Horário fora do período de atendimento do profissional")
+
+        # 3. Verificar se o horário está livre (não colide com outros agendamentos)
+        horarios_ocupados = obter_agendamentos_existentes(db, profissional_id, data_obj)
+
+        for ocupado in horarios_ocupados:
+            # Se há alguma sobreposição entre o agendamento pretendido e um horário ocupado
+            if inicio_agendamento < ocupado['fim'] and fim_agendamento > ocupado['inicio']:
+                return response(False, "Horário indisponível, já existe agendamento neste período")
+
+        # Criar o agendamento
+        novo_agendamento = Agendamento(
+            cliente_id=cliente_id,
+            profissional_id=profissional_id,
+            servicos=[servico_id],
+            start=inicio_agendamento,
+            end=fim_agendamento,
+            title=title if title else f"Agendamento de {servico.name}",
+            description=description,
+            status="agendado"
+        )
+
+        db.add(novo_agendamento)
+        db.commit()
+        db.refresh(novo_agendamento)
+
+        # Se o profissional tiver um calendar_id, pode-se integrar com Google Calendar
+        # if profissional.calendar_id:
+        #     try:
+        #         from app.GoogleCalendarManager import GoogleCalendarManager
+        #
+        #         # Criar evento no Google Calendar
+        #         calendar = GoogleCalendarManager(
+        #             credentials_path='',
+        #             calendar_id=profissional.calendar_id
+        #         )
+        #
+        #         summary = novo_agendamento.title
+        #         event = calendar.create_event(
+        #             summary=summary,
+        #             start_time=novo_agendamento.start,
+        #             end_time=novo_agendamento.end,
+        #             description=novo_agendamento.description
+        #         )
+        #
+        #         # Opcionalmente, poderia salvar o ID do evento do Google Calendar no agendamento
+        #         if event and 'id' in event:
+        #             novo_agendamento.google_event_id = event['id']
+        #             db.commit()
+        #
+        #     except Exception as e:
+        #         # Não interromper o fluxo se falhar a integração com o Calendar
+        #         print(f"Erro ao integrar com Google Calendar: {str(e)}")
+
+        return response(
+            True,
+            "Agendamento criado com sucesso",
+            {
+                "id": novo_agendamento.id,
+                "inicio": novo_agendamento.start.strftime('%Y-%m-%d %H:%M'),
+                "fim": novo_agendamento.end.strftime('%Y-%m-%d %H:%M'),
+                "servico": servico.name,
+                "profissional": profissional.name
+            }
+        )
+
+    except Exception as e:
+        db.rollback()
+        return response(False, f"Erro ao criar agendamento: {str(e)}")
+    finally:
+        db.close()
+
+
 def validar_data(date_str: str) -> Tuple[bool, Any]:
     """Valida e converte a string de data para objeto datetime."""
     try:
