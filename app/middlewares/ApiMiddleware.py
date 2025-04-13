@@ -17,7 +17,6 @@ class ApiMiddleware(BaseHTTPMiddleware):
             return response
 
         if 'apiKey' not in request.headers:
-            from fastapi.responses import JSONResponse
             return JSONResponse(
                 content={
                     "status": "error",
@@ -29,7 +28,6 @@ class ApiMiddleware(BaseHTTPMiddleware):
 
         api_key = request.headers.get('apiKey')
         if not api_key or api_key != os.environ.get('API_KEY'):
-            from fastapi.responses import JSONResponse
             return JSONResponse(
                 content={
                     "status": "error",
