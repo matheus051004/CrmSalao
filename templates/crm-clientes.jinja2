@@ -101,7 +101,8 @@
                                         <td>{{ item.email }}</td>
                                         <td>{{ item.phone }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" onclick="whatsappModal('{{ item.name }}', '{{ item.phone }}')"
+                                            <a href="javascript:void(0)"
+                                               onclick="whatsappModal('{{ item.name }}', '{{ item.phone }}')"
                                                class="btn btn-sm btn-success send-whatsapp-message">
                                                 <i class="fa-brands fa-whatsapp"></i>
                                             </a>
@@ -205,7 +206,24 @@
         }
         document.querySelector('#whatsappModal #confirmSend2').onclick = function () {
             const message = document.querySelector('#whatsappModal #whatsappMessage').value;
+            const formData = new FormData();
+            formData.append('phone', phone);
+            formData.append('message', message);
 
+            fetch('{{ url_for('ajax-evo-simple-message') }}'.replace('http', 'https'), {
+                method: 'POST',
+                body: formData
+            }).then(res => {
+                (async () => {
+                    const json = await res.json()
+                    const notyf = new Notyf();
+                    if (json.status === 200) {
+                        notyf.success('Mensagem enviada com sucesso!');
+                    } else {
+                        notyf.error('Erro ao enviar mensagem: ' + json.message);
+                    }
+                })()
+            })
         }
         whatsappModal.show();
     }
@@ -216,12 +234,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="whatsappModalLabel">Enviar mensagem para: <span class="cliente-name"></span></h5>
+                <h5 class="modal-title" id="whatsappModalLabel">Enviar mensagem para: <span class="cliente-name"></span>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="clientPhone">
-                <textarea class="form-control" id="whatsappMessage" placeholder="Digite sua mensagem aqui..."></textarea>
+                <textarea class="form-control" id="whatsappMessage"
+                          placeholder="Digite sua mensagem aqui..."></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

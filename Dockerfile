@@ -20,7 +20,8 @@ ENV POSTGRES_USER="postgres"
 ENV POSTGRES_PASSWORD="e3121c21-dfd5-42c3-bc74-5e71dad28c91"
 ENV POSTGRES_DB="salao-crm"
 
-ENV EVOLUTION_API_URL="https://evolution.thsolucoes.site/"
+# sem barra no final
+ENV EVOLUTION_API_URL="https://evolution.thsolucoes.site"
 ENV EVOLUTION_API_KEY="e3121c21-dfd5-42c3-bc74-5e71dad28c91"
 ENV EVOLUTION_INSTANCE="556391323339"
 

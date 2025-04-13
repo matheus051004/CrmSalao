@@ -8,6 +8,8 @@ import app.glob as glob
 from app.routers.auth import login
 from app.routers.crm import crm
 from app.routers.ajax import ajax
+from app.routers.ajax import ajax_evolution
+
 from app.database import create_all_tables
 
 from app.middlewares.AuthMiddleware import AuthMiddleware
@@ -23,6 +25,7 @@ glob.templates = templates
 app.include_router(login.router)
 app.include_router(crm.router)
 app.include_router(ajax.router)
+app.include_router(ajax_evolution.router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)

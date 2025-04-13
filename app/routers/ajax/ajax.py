@@ -165,8 +165,9 @@ def get_monthly_year_faturamento(current_year=datetime.now().year) -> list[float
 
             for agendamento in agendamentos:
                 for servico_id in agendamento['servicos']:
-                    servico = db.query(Servico).filter_by(id=servico_id).first()
-                    faturamento += float(servico.price)
+                    if db.query(Servico).filter_by(id=servico_id).exists():
+                        servico = db.query(Servico).filter_by(id=servico_id).first()
+                        faturamento += float(servico.price)
 
             months_faturamento.append(faturamento)
         finally:
@@ -195,8 +196,9 @@ def get_monthly_year_faturamento_previsto(current_year=datetime.now().year) -> l
 
             for agendamento in agendamentos:
                 for servico_id in agendamento['servicos']:
-                    servico = db.query(Servico).filter_by(id=servico_id).first()
-                    faturamento += float(servico.price)
+                    if db.query(Servico).filter_by(id=servico_id).exists():
+                        servico = db.query(Servico).filter_by(id=servico_id).first()
+                        faturamento += float(servico.price)
 
             months_faturamento.append(faturamento)
         finally:
@@ -224,8 +226,9 @@ def get_month_faturamento(month=datetime.now().month, current_year=datetime.now(
 
         for agendamento in agendamentos:
             for servico_id in agendamento['servicos']:
-                servico = db.query(Servico).filter_by(id=servico_id).first()
-                faturamento += float(servico.price)
+                if db.query(Servico).filter_by(id=servico_id).exists():
+                    servico = db.query(Servico).filter_by(id=servico_id).first()
+                    faturamento += float(servico.price)
         return faturamento
     finally:
         db.close()
