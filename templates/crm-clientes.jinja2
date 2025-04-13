@@ -246,7 +246,7 @@
     function deleteCliente(url) {
         const notyf = new Notyf();
         if (confirm('Tem certeza que deseja excluir este cliente?\n\n - Todos os dados relacionados a ele serão excluídos.\n - Esta ação não pode ser desfeita.')) {
-            fetch(url, {
+            fetch(url.replace('http', 'https'), {
                 method: 'DELETE',
             }).then(res => {
                 (async () => {
