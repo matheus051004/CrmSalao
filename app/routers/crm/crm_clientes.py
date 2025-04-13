@@ -10,7 +10,6 @@ from app.database import SessionLocal
 
 router = APIRouter(
     prefix="/clientes",
-    tags=["clientes"],
     include_in_schema=False
 )
 

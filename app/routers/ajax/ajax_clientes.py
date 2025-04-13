@@ -5,7 +5,6 @@ from app.database import SessionLocal
 
 router = APIRouter(
     prefix="/ajax-clientes",
-    tags=["ajax_clientes"],
     include_in_schema=False
 )
 

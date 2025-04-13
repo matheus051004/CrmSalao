@@ -7,11 +7,14 @@ from fastapi.responses import RedirectResponse
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Rotas que não precisam de autenticação
-        public_paths = ['/login', '/static']
+        # Rotas que precisam de autenticação
+        protected_paths = ['/crm', '/ajax']
 
-        # Verifica se o caminho atual é público
-        if any(request.url.path.startswith(path) for path in public_paths):
+        # Verifica se o caminho atual precisa de autenticação
+        needs_auth = any(request.url.path.startswith(path) for path in protected_paths)
+
+        # Se o caminho não precisa de autenticação, continua para a próxima etapa
+        if not needs_auth:
             response = await call_next(request)
             return response
 

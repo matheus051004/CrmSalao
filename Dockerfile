@@ -25,6 +25,8 @@ ENV EVOLUTION_API_URL="https://evolution.thsolucoes.site"
 ENV EVOLUTION_API_KEY="e3121c21-dfd5-42c3-bc74-5e71dad28c91"
 ENV EVOLUTION_INSTANCE="556391323339"
 
+ENV API_KEY="e3121c21-dfd5-42c3-bc74-5e71dad28c91"
+
 
 # Copiar todo o código da aplicação
 COPY . .

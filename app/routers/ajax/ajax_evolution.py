@@ -6,7 +6,6 @@ import requests
 
 router = APIRouter(
     prefix="/ajax-evo",
-    tags=["ajax-evo"],
     include_in_schema=False
 )
 
