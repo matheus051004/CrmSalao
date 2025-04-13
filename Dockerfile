@@ -1,6 +1,9 @@
 # Imagem base com Python 3.10
 FROM python:3.10-slim
 
+# Configuração do Timezone
+ENV TZ=America/Sao_Paulo
+
 # Definir diretório de trabalho
 WORKDIR /app
 
