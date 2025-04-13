@@ -197,15 +197,23 @@
 
 <script>
     function whatsappModal(name, phone) {
+        const notyf = new Notyf();
+
         const whatsappModal = new bootstrap.Modal(document.getElementById('whatsappModal'));
         document.querySelector('#whatsappModal .cliente-name').textContent = name;
+
+        const message = document.querySelector('#whatsappModal #whatsappMessage').value;
+
+        if (!message) {
+            notyf.error('Digite uma mensagem para enviar.');
+            return;
+        }
         document.querySelector('#whatsappModal #confirmSend').onclick = function () {
-            const message = document.querySelector('#whatsappModal #whatsappMessage').value;
             const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
+            whatsappModal.hide();
         }
         document.querySelector('#whatsappModal #confirmSend2').onclick = function () {
-            const message = document.querySelector('#whatsappModal #whatsappMessage').value;
             const formData = new FormData();
             formData.append('number', phone);
             formData.append('message', message);
@@ -216,7 +224,6 @@
             }).then(res => {
                 (async () => {
                     const json = await res.json()
-                    const notyf = new Notyf();
                     if (json.status === 200) {
                         notyf.success(json.message);
                     } else {
@@ -224,6 +231,7 @@
                     }
                 })()
             })
+            whatsappModal.hide();
         }
         whatsappModal.show();
     }
