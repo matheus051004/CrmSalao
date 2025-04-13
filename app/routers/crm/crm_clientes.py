@@ -9,23 +9,12 @@ from app import Cliente
 from app.database import SessionLocal
 
 router = APIRouter(
-    prefix="/crm",
-    tags=["crm"]
+    prefix="/clientes",
+    tags=["clientes"]
 )
 
-@router.get('/', name='crm', response_class=HTMLResponse)
-async def crm(request: Request):
-    return await dashboard(request)
 
-@router.get('/dashboard', name='dashboard', response_class=HTMLResponse)
-async def dashboard(request: Request):
-    return g.templates.TemplateResponse('crm-dashboard.jinja2', {
-        'request': request,
-        'sidebar': 'dashboard',
-    })
-
-
-@router.get('/clientes', name='clientes', response_class=HTMLResponse)
+@router.get('/', name='clientes', response_class=HTMLResponse)
 async def clientes(request: Request, page: int = 1, order_by: str = 'id', order: str = 'asc', per_page: int = 10):
 
     valid_per_page_values = [10, 25, 50, 100]
