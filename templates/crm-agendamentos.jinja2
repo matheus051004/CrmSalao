@@ -88,7 +88,15 @@
                                     <tr>
                                         <td>{{ item.id }}</td>
                                         <td>{{ item.title }}</td>
-                                        <td>{{ item.status }}</td>
+                                        <td>
+                                            {% if item.status == 'agendado' %}
+                                                <span class="badge bg-warning">Agendado</span>
+                                            {% elif item.status == 'concluido' %}
+                                                <span class="badge bg-success">Confirmado</span>
+                                            {% elif item.status == 'cancelado' %}
+                                                <span class="badge bg-danger">Cancelado</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ item.servicos }}</td>
                                         <td>{{ item.cliente_id }}</td>
                                         <td>{{ item.profissional_id }}</td>
