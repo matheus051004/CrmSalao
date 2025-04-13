@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from fastapi.routing import APIRouter
 
 from app import Servico, Profissional
@@ -30,7 +32,7 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
         if not servico:
             return response(False, "Serviço não encontrado")
 
-        profissional:Profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
+        profissional: Profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
         if not profissional:
             return response(False, "Profissional não encontrado")
 
@@ -93,7 +95,7 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
                     horarios_disponiveis.append({
                         'start': slot_atual.strftime('%H:%M'),
                         'end': slot_fim.strftime('%H:%M'),
-                        #'data': date
+                        # 'data': date
                     })
 
                 # Avança para o próximo slot
