@@ -87,15 +87,15 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
 
                 if disponivel:
                     horarios_disponiveis.append({
-                        'inicio': slot_atual.strftime('%H:%M'),
-                        'fim': slot_fim.strftime('%H:%M'),
-                        'data': date
+                        'start': slot_atual.strftime('%H:%M'),
+                        'end': slot_fim.strftime('%H:%M'),
+                        #'data': date
                     })
 
                 # Avança para o próximo slot
                 slot_atual += timedelta(minutes=intervalo_minutos)
 
-        return response(True, "Horários disponíveis encontrados", horarios_disponiveis)
+        return response(True, "Horários disponíveis", horarios_disponiveis)
 
     finally:
         db.close()
