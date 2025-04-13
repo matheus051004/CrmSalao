@@ -17,14 +17,14 @@ async def delete_cliente(cliente_id: int):
     try:
         cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
         if not cliente:
-            raise HTTPException(status_code=404, detail="Cliente not found")
+            return {"status": 404, "message": f"Cliente with ID {cliente_id} not found."}
 
         delete_cliente_related_data(cliente_id)
         db.delete(cliente)
         db.commit()
     finally:
         db.close()
-    return {"status": "success", "message": f"Cliente with ID {cliente_id} deleted."}, 200
+    return {"status": 200, "message": f"Cliente with ID {cliente_id} deleted."}
 
 
 # db functions

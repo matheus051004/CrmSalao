@@ -109,7 +109,7 @@
                                             <a href="mailto:{{ item.email }}" class="btn btn-sm btn-dark">
                                                 <i class="fas fa-envelope"></i>
                                             </a>
-                                            <a href="{{ url_for('ajax-delete-cliente', cliente_id=item.id) }}" class="btn btn-sm btn-danger">
+                                            <a href="javascript:void(0)" onclick="deleteCliente('{{ url_for('ajax-delete-cliente', cliente_id=item.id) }}')" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -241,6 +241,25 @@
             whatsappModal.hide();
         }
         whatsappModal.show();
+    }
+
+    function deleteCliente(url) {
+        const notyf = new Notyf();
+        if (confirm('Tem certeza que deseja excluir este cliente?\n\n - Todos os dados relacionados a ele serão excluídos.\n - Esta ação não pode ser desfeita.')) {
+            fetch(url, {
+                method: 'DELETE',
+            }).then(res => {
+                (async () => {
+                    const json = await res.json()
+                    if (json.status === 200) {
+                        notyf.success(json.message);
+                        location.reload();
+                    } else {
+                        notyf.error('Erro ao excluir cliente: ' + json.message);
+                    }
+                })()
+            })
+        }
     }
 </script>
 
