@@ -6,6 +6,7 @@ import app.glob as glob
 from app.database import create_all_tables
 from app.jinja import prepare_jinja
 from app.middlewares.AuthMiddleware import AuthMiddleware
+from app.middlewares.ApiMiddleware import ApiMiddleware
 from app.routers.auth import login
 from app.routers.crm import crm_router
 from app.routers.ajax import ajax_router
@@ -26,6 +27,7 @@ app.include_router(ajax_router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
+app.add_middleware(ApiMiddleware)
 
 import logging
 
