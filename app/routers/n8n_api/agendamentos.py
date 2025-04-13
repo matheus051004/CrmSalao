@@ -6,6 +6,7 @@ from fastapi.routing import APIRouter
 from app import Servico, Profissional
 from app.database import SessionLocal
 from app.models.agendamentos import Agendamento
+from app.models.pydantic.AgendamentoCreate import AgendamentoCreate
 
 agendamentos_router = APIRouter(
     prefix="/agendamentos",
@@ -49,27 +50,16 @@ async def horarios_diponiveis(date: str, profissional_id: int, servico_id: int):
 
 
 @agendamentos_router.post("/criar", name="n8n-criar-agendamento")
-async def criar_agendamento(
-        cliente_id: int,
-        profissional_id: int,
-        servico_id: int,
-        date: str,
-        start_hour: str,
-        title: str = None,
-        description: str = None
-):
-    """
-    Cria um novo agendamento de serviço com as devidas validações.
+async def criar_agendamento(dados: AgendamentoCreate):
 
-    Args:
-        cliente_id: ID do cliente
-        profissional_id: ID do profissional
-        servico_id: ID do serviço
-        date: Data do agendamento (YYYY-MM-DD)
-        start_hour: Horário de início (HH:MM)
-        title: Título do agendamento (opcional)
-        description: Descrição do agendamento (opcional)
-    """
+    cliente_id = dados.cliente_id
+    profissional_id = dados.profissional_id
+    servico_id = dados.servico_id
+    date = dados.date
+    start_hour = dados.start_hour
+    title = dados.title
+    description = dados.description
+
     # Validar a data
     sucesso, resultado = validar_data(date)
     if not sucesso:
