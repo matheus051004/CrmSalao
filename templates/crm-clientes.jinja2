@@ -203,17 +203,22 @@
         document.querySelector('#whatsappModal .cliente-name').textContent = name;
 
         const message = document.querySelector('#whatsappModal #whatsappMessage').value;
-
-        if (!message) {
-            notyf.error('Digite uma mensagem para enviar.');
-            return;
-        }
         document.querySelector('#whatsappModal #confirmSend').onclick = function () {
+            if (!message) {
+                notyf.error('Digite uma mensagem para enviar.');
+                return;
+            }
+
             const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
             whatsappModal.hide();
         }
         document.querySelector('#whatsappModal #confirmSend2').onclick = function () {
+            if (!message) {
+                notyf.error('Digite uma mensagem para enviar.');
+                return;
+            }
+
             const formData = new FormData();
             formData.append('number', phone);
             formData.append('message', message);
