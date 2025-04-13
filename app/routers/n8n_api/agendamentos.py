@@ -53,8 +53,8 @@ async def criar_agendamento(
         cliente_id: int,
         profissional_id: int,
         servico_id: int,
-        data: str,
-        horario_inicio: str,
+        date: str,
+        start_hour: str,
         title: str = None,
         description: str = None
 ):
@@ -65,13 +65,13 @@ async def criar_agendamento(
         cliente_id: ID do cliente
         profissional_id: ID do profissional
         servico_id: ID do serviço
-        data: Data do agendamento (YYYY-MM-DD)
-        horario_inicio: Horário de início (HH:MM)
+        date: Data do agendamento (YYYY-MM-DD)
+        start_hour: Horário de início (HH:MM)
         title: Título do agendamento (opcional)
         description: Descrição do agendamento (opcional)
     """
     # Validar a data
-    sucesso, resultado = validar_data(data)
+    sucesso, resultado = validar_data(date)
     if not sucesso:
         return response(False, resultado)
 
@@ -91,7 +91,7 @@ async def criar_agendamento(
 
         # 2. Verificar se o horário escolhido está dentro do período de trabalho do profissional
         try:
-            hora_inicio = datetime.strptime(horario_inicio, '%H:%M').time()
+            hora_inicio = datetime.strptime(start_hour, '%H:%M').time()
             inicio_agendamento = datetime.combine(data_obj, hora_inicio)
             fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_servico)
         except ValueError:
