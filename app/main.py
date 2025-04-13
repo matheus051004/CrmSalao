@@ -9,6 +9,7 @@ from app.routers.auth import login
 from app.routers.crm import crm
 from app.routers.ajax import ajax_dashboard
 from app.routers.ajax import ajax_evolution
+from app.routers.ajax import ajax_clientes
 
 from app.database import create_all_tables
 
@@ -26,6 +27,7 @@ app.include_router(login.router)
 app.include_router(crm.router)
 app.include_router(ajax_dashboard.router)
 app.include_router(ajax_evolution.router)
+app.include_router(ajax_clientes.router)
 
 # middlewares
 app.add_middleware(AuthMiddleware)
