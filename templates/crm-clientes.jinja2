@@ -203,6 +203,10 @@
             const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
+        document.querySelector('#whatsappModal #confirmSend2').onclick = function () {
+            const message = document.querySelector('#whatsappModal #whatsappMessage').value;
+
+        }
         whatsappModal.show();
     }
 </script>
@@ -221,7 +225,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" id="confirmSend">Enviar</button>
+                <button type="button" class="btn btn-success" id="confirmSend">Enviar manual</button>
+                <button type="button" class="btn btn-success" id="confirmSend2">Enviar auto.</button>
             </div>
         </div>
     </div>
