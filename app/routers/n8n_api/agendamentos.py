@@ -11,6 +11,7 @@ from app.models.agendamentos import Agendamento
 from app.models.pydantic.AgendamentoCancel import AgendamentoCancel
 from app.models.pydantic.AgendamentoCreate import AgendamentoCreate
 from app.GoogleCalendarManager import GoogleCalendarManager
+from app.models.pydantic.AgendamentoReschedule import AgendamentoReschedule
 
 agendamentos_router = APIRouter(
     prefix="/agendamentos",
@@ -197,6 +198,57 @@ async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
         gcm.delete_event(agendamento.google_event_id)
 
         return response(True, "Agendamento cancelado com sucesso")
+    finally:
+        db.close()
+
+
+@agendamentos_router.post('/reagendar', name='n8n-reagendar-agendamento')
+async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
+    agendamento_id = agendamento_reschedule.agendamento_id
+    cliente_id = agendamento_reschedule.cliente_id
+
+    date = datetime.strptime(agendamento_reschedule.new_date_time, '%Y-%m-%d %H:%M')
+    dia_semana = str(date.weekday())
+
+    db = SessionLocal()
+    try:
+        agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id).first()
+        if not agendamento:
+            return response(False, "Agendamento não encontrado")
+
+        if agendamento.cliente_id != cliente_id:
+            return response(False, "Você não tem permissão para reagendar este evento")
+
+        # 1. Verificar se o profissional atende todos os serviços e trabalha naquele dia
+        sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
+            db, agendamento.profissional_id, agendamento.servicos, dia_semana
+        )
+        if not sucesso:
+            return response(False, resultado)
+        horarios_do_dia = resultado
+
+        # 2. Verificar se o horário escolhido está dentro do período de trabalho do profissional
+        try:
+            hora_inicio = date.time()
+            inicio_agendamento = datetime.combine(date, hora_inicio)
+            fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_total)
+        except ValueError:
+            return response(False, "Formato de horário inválido, use HH:MM")
+
+        # Verificar se está no horário de atendimento do profissional
+        horario_valido = False
+        for periodo in horarios_do_dia:
+            hora_inicio_periodo = datetime.strptime(periodo['inicio'], '%H:%M').time()
+            hora_fim_periodo = datetime.strptime(periodo['fim'], '%H:%M').time()
+            inicio_periodo = datetime.combine(date, hora_inicio_periodo)
+            fim_periodo = datetime.combine(date, hora_fim_periodo)
+            if inicio_agendamento >= inicio_periodo and fim_agendamento <= fim_periodo:
+                horario_valido = True
+                break
+        if not horario_valido:
+            return response(False, "Horário fora do período de atendimento do profissional")
+
+        return response(True, "Teste")
     finally:
         db.close()
 

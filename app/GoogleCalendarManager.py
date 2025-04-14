@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -7,7 +8,7 @@ import os
 
 
 class GoogleCalendarManager:
-    def __init__(self, calendar_id='primary', credentials_json_b64:str=None):
+    def __init__(self, calendar_id='primary', credentials_json_b64: str = None):
         """
         Initialize the Google Calendar Manager using credentials from environment variable.
 
@@ -75,3 +76,44 @@ class GoogleCalendarManager:
         except Exception as e:
             print(f'An error occurred: {e}')
             return False
+
+    def reschedule_event(self, event_id, new_start_time:datetime, new_end_time, timezone='America/Sao_Paulo'):
+        """
+        Reagenda um evento no calendário, atualizando seus horários de início e término.
+
+        Args:
+            event_id (str): ID do evento a ser reagendado
+            new_start_time (datetime): Novo horário de início do evento
+            new_end_time (datetime): Novo horário de término do evento
+            timezone (str): Fuso horário do evento (padrão é 'America/Sao_Paulo')
+
+        Returns:
+            tuple: (bool, str) - (Sucesso da operação, Mensagem)
+        """
+        try:
+            # Primeiro, obtém o evento existente para preservar outros campos
+            event = self.service.events().get(
+                calendarId=self.calendar_id,
+                eventId=event_id
+            ).execute()
+
+            # Atualiza os horários de início e término
+            event['start'] = {
+                'dateTime': new_start_time.isoformat(),
+                'timeZone': timezone,
+            }
+            event['end'] = {
+                'dateTime': new_end_time.isoformat(),
+                'timeZone': timezone,
+            }
+
+            # Atualiza o evento no Google Calendar
+            updated_event = self.service.events().update(
+                calendarId=self.calendar_id,
+                eventId=event_id,
+                body=event
+            ).execute()
+
+            return True, f'Evento reagendado com sucesso para {new_start_time.strftime("%d/%m/%Y %H:%M")}'
+        except Exception as e:
+            return False, f'Erro ao reagendar evento: {e}'
