@@ -97,13 +97,13 @@
                             {% if items %}
                                 {% for item in items %}
                                     <tr>
-                                        <td class="text-center">
+                                        <td class="text-center align-middle">
                                             <input type="checkbox" class="form-check-input item-checkbox"
                                                    data-id="{{ item.id }}">
                                         </td>
-                                        <td>{{ item.id }}</td>
-                                        <td>{{ item.title }}</td>
-                                        <td>
+                                        <td class="align-middle">{{ item.id }}</td>
+                                        <td class="align-middle">{{ item.title }}</td>
+                                        <td class="align-middle">
                                             {% if item.status == 'agendado' %}
                                                 <span class="badge bg-warning">Agendado</span>
                                             {% elif item.status == 'concluido' %}
