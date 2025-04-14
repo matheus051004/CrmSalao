@@ -3,6 +3,7 @@ from datetime import datetime, time, timedelta
 from typing import Tuple, Any, Optional, List, Dict
 
 from fastapi.routing import APIRouter
+from pkg_resources import find_nothing
 
 from app import Servico, Profissional
 from app.database import SessionLocal
@@ -171,7 +172,31 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
 @agendamentos_router.post('/cancelar', name='n8n-cancelar-agendamento')
 async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
-    pass
+    agendamento_id = agendamento_cancel.agendamento_id
+    cliente_id = agendamento_cancel.cliente_id
+
+    db = SessionLocal()
+    try:
+        # Verifica se o agendamento existe
+        agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id).first()
+        if not agendamento:
+            return response(False, "Agendamento não encontrado")
+
+        # Verifica se o cliente é o dono do agendamento
+        if agendamento.cliente_id != cliente_id:
+            return response(False, "Você não tem permissão para cancelar este agendamento")
+
+        # Cancela o agendamento
+        agendamento.status = 'cancelado'
+        db.commit()
+
+        # Remove o evento do Google Calendar
+        gcm = GoogleCalendarManager(agendamento.profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm.delete_event(agendamento.google_event_id)
+
+        return response(True, "Agendamento cancelado com sucesso")
+    finally:
+        db.close()
 
 
 def validar_data(date_str: str) -> Tuple[bool, Any]:
