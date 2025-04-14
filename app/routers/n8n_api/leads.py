@@ -1,10 +1,41 @@
 from fastapi import APIRouter
 
+from app import Cliente
+from app.database import SessionLocal
+from app.models.pydantic import LeadCreate
+
 leads_router = APIRouter(
     prefix="/leads",
     include_in_schema=True,
 )
 
-@leads_router.get("/")
-async def get_leads():
-    pass
+
+@leads_router.post("/create")
+async def create(lead_create: LeadCreate):
+    db = SessionLocal()
+    try:
+        cliente = db.query(Cliente).filter(Cliente.phone == lead_create.phone).first()
+        if cliente:
+            return response(False, "Lead já existe")
+
+        cliente = Cliente(
+            name=lead_create.name,
+            email=lead_create.email,
+            phone=lead_create.phone,
+        )
+        db.add(cliente)
+        db.commit()
+        return response(True, "Lead registrado com sucesso")
+    finally:
+        db.close()
+
+
+def response(success=True, message="", data=None):
+    """
+    Formata a resposta da API.
+    """
+    return {
+        "success": success,
+        "message": message,
+        "data": data
+    }
