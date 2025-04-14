@@ -212,7 +212,8 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
 
     db = SessionLocal()
     try:
-        agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id).first()
+        agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id,
+                                                   Agendamento.status == 'agendado').first()
         if not agendamento:
             return response(False, "Agendamento não encontrado")
 
@@ -247,6 +248,14 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
                 break
         if not horario_valido:
             return response(False, "Horário fora do período de atendimento do profissional")
+
+        # 3. Verificar se o horário está livre (não colide com outros agendamentos)
+        horarios_ocupados = obter_agendamentos_existentes(db, agendamento.profissional_id, date)
+        for ocupado in horarios_ocupados:
+
+            # Se há alguma sobreposição entre o agendamento pretendido e um horário ocupado
+            if inicio_agendamento < ocupado['fim'] and fim_agendamento > ocupado['inicio']:
+                return response(False, "Horário indisponível, já existe agendamento neste período")
 
         return response(True, "Teste")
     finally:
