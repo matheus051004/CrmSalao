@@ -60,21 +60,21 @@
                         </div>
                     </div>
 
-                    <div class="mt-2 mb-4">
-                        <span>Com os marcados:</span>
-                        <div class="d-flex gap-2 mt-2">
-                            <button class="btn btn-success"><i class="fa-solid fa-check"></i> Concluir</button>
-                            <button class="btn btn-danger"><i class="fa-solid fa-power-off"></i> Cancelar</button>
-                        </div>
-                    </div>
+{#                    <div class="mt-2 mb-4">#}
+{#                        <span>Com os marcados:</span>#}
+{#                        <div class="d-flex gap-2 mt-2">#}
+{#                            <button class="btn btn-success"><i class="fa-solid fa-check"></i> Concluir</button>#}
+{#                            <button class="btn btn-danger"><i class="fa-solid fa-power-off"></i> Cancelar</button>#}
+{#                        </div>#}
+{#                    </div>#}
 
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
                             <tr>
-                                <th scope="col" class="text-center">
-                                    <input type="checkbox" class="form-check-input" id="selectAll">
-                                </th>
+{#                                <th scope="col" class="text-center">#}
+{#                                    <input type="checkbox" class="form-check-input" id="selectAll">#}
+{#                                </th>#}
                                 <th scope="col">
                                     <a href="{{ url_for('agendamentos') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
                                         ID
@@ -97,10 +97,10 @@
                             {% if items %}
                                 {% for item in items %}
                                     <tr>
-                                        <td class="text-center align-middle">
-                                            <input type="checkbox" class="form-check-input item-checkbox"
-                                                   data-id="{{ item.id }}">
-                                        </td>
+{#                                        <td class="text-center align-middle">#}
+{#                                            <input type="checkbox" class="form-check-input item-checkbox"#}
+{#                                                   data-id="{{ item.id }}">#}
+{#                                        </td>#}
                                         <td class="align-middle">{{ item.id }}</td>
                                         <td class="align-middle">{{ item.title }}</td>
                                         <td class="align-middle">
@@ -218,7 +218,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Select All Checkboxes
+        /*
         const selectAllCheckbox = document.getElementById('selectAll');
         const itemCheckboxes = document.querySelectorAll('.item-checkbox');
 
@@ -227,6 +227,7 @@
                 checkbox.checked = selectAllCheckbox.checked;
             });
         });
+         */
     });
 </script>
 </body>
