@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app import Cliente
 from app.database import SessionLocal
-from app.models.pydantic import LeadCreate
+from app.models.pydantic.LeadCreate import LeadCreate
 
 leads_router = APIRouter(
     prefix="/leads",
