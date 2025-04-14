@@ -118,7 +118,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
         # Preparar nomes dos serviços para o título automático
         nomes_servicos = ", ".join([servico.name for servico in servicos])
-        titulo_auto = f"Agendamento de {nomes_servicos}"
+        titulo_auto = f"{nomes_servicos}"
 
         # Criar o agendamento
         novo_agendamento = Agendamento(
@@ -129,7 +129,8 @@ async def criar_agendamento(dados: AgendamentoCreate):
             end=fim_agendamento,
             title=titulo_auto,
             description=description,
-            status="agendado"
+            status="agendado",
+            metadata=metadata
         )
 
         db.add(novo_agendamento)
