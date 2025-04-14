@@ -230,9 +230,7 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
 
         # 2. Verificar se o horário escolhido está dentro do período de trabalho do profissional
         try:
-            hora_inicio = date.time()
-            inicio_agendamento = datetime.combine(date, hora_inicio)
-            fim_agendamento = inicio_agendamento + timedelta(minutes=duracao_total)
+            fim_agendamento = date + timedelta(minutes=duracao_total)
         except ValueError:
             return response(False, "Formato de horário inválido, use HH:MM")
 
@@ -243,7 +241,7 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
             hora_fim_periodo = datetime.strptime(periodo['fim'], '%H:%M').time()
             inicio_periodo = datetime.combine(date, hora_inicio_periodo)
             fim_periodo = datetime.combine(date, hora_fim_periodo)
-            if inicio_agendamento >= inicio_periodo and fim_agendamento <= fim_periodo:
+            if date >= inicio_periodo and fim_agendamento <= fim_periodo:
                 horario_valido = True
                 break
         if not horario_valido:
@@ -254,10 +252,27 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
         for ocupado in horarios_ocupados:
 
             # Se há alguma sobreposição entre o agendamento pretendido e um horário ocupado
-            if inicio_agendamento < ocupado['fim'] and fim_agendamento > ocupado['inicio']:
+            if date < ocupado['fim'] and fim_agendamento > ocupado['inicio']:
                 return response(False, "Horário indisponível, já existe agendamento neste período")
 
-        return response(True, "Teste")
+        agendamento.start = date
+        agendamento.end = fim_agendamento
+        db.add(agendamento)
+        db.commit()
+
+        # Google Calendar
+        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm.reschedule_event(
+            event_id=agendamento.google_event_id,
+            new_start_time=date,
+            new_end_time=fim_agendamento,
+        )
+
+        return response(True, 'Agendamento reagendado com sucesso', {
+                "id": agendamento.id,
+                "inicio": agendamento.start.strftime('%Y-%m-%d %H:%M'),
+                "fim": agendamento.end.strftime('%Y-%m-%d %H:%M')
+            })
     finally:
         db.close()
 
