@@ -113,7 +113,11 @@
                                         </td>
                                         <td><a href="javascript:void(0)"
                                                onclick="alert(`{{ get_servicos_string(item.servicos) }}`)">VER</a></td>
-                                        <td>{{ get_cliente(item.cliente_id).name }}</td>
+                                        <td>
+                                            <a href="{{ url_for('clientes') }}?search={{ get_cliente(item.cliente_id).name }}">
+                                                {{ get_cliente(item.cliente_id).name }}
+                                            </a>
+                                        </td>
                                         <td>{{ get_profissional(item.profissional_id).name }}</td>
                                         <td>{{ reformat_date_time(item.start, '%d-%m %H:%M') }}</td>
                                         <td>{{ reformat_date_time(item.end, '%d-%m %H:%M') }}</td>
