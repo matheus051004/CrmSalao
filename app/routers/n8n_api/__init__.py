@@ -2,8 +2,7 @@ from fastapi import APIRouter
 
 n8n_api_router = APIRouter(
     prefix="/n8n-api",
-    tags=["n8n-api"],
-    include_in_schema=False,
+    include_in_schema=True,
 )
 
 from app.routers.n8n_api import agendamentos
