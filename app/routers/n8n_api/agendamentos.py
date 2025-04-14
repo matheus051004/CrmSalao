@@ -269,10 +269,34 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
         )
 
         return response(True, 'Agendamento reagendado com sucesso', {
+            "id": agendamento.id,
+            "inicio": agendamento.start.strftime('%Y-%m-%d %H:%M'),
+            "fim": agendamento.end.strftime('%Y-%m-%d %H:%M')
+        })
+    finally:
+        db.close()
+
+
+@agendamentos_router.get('/', name='n8n-agendamentos')
+async def get_agendamentos(cliente_id: int, status='agendado'):
+    db = SessionLocal()
+    try:
+        agendamentos = db.query(Agendamento).filter(Agendamento.cliente_id == cliente_id,
+                                                    Agendamento.status == status).all()
+        if not agendamentos:
+            return response(False, "Nenhum agendamento encontrado")
+
+        agendamentos_data = []
+        for agendamento in agendamentos:
+            agendamentos_data.append({
                 "id": agendamento.id,
                 "inicio": agendamento.start.strftime('%Y-%m-%d %H:%M'),
-                "fim": agendamento.end.strftime('%Y-%m-%d %H:%M')
+                "fim": agendamento.end.strftime('%Y-%m-%d %H:%M'),
+                "servicos": ", ".join([servico.name for servico in db.query(Servico).filter(Servico.id.in_(agendamento.servicos)).all()]),
+                "profissional": db.query(Profissional).filter(Profissional.id == agendamento.profissional_id).first().name
             })
+
+        return response(True, "Agendamentos encontrados", agendamentos_data)
     finally:
         db.close()
 
