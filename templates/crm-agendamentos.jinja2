@@ -127,11 +127,8 @@
                         <table class="table table-striped table-hover">
                             <thead>
                             <tr>
-                                {#                                <th scope="col" class="text-center">#}
-                                {#                                    <input type="checkbox" class="form-check-input" id="selectAll">#}
-                                {#                                </th>#}
                                 <th scope="col">
-                                    <a href="{{ url_for('agendamentos') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
+                                    <a href="{{ url_for('agendamentos') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}&cliente_id={{ cliente_id }}&status={{ status }}">
                                         ID
                                         {% if order_by == 'id' %}
                                             <i class="fas fa-sort-{{ 'up' if order == 'asc' else 'down' }}"></i>
@@ -152,10 +149,6 @@
                             {% if items %}
                                 {% for item in items %}
                                     <tr>
-                                        {#                                        <td class="text-center align-middle">#}
-                                        {#                                            <input type="checkbox" class="form-check-input item-checkbox"#}
-                                        {#                                                   data-id="{{ item.id }}">#}
-                                        {#                                        </td>#}
                                         <td class="align-middle">{{ item.id }}</td>
                                         <td class="align-middle">{{ item.title }}</td>
                                         <td class="align-middle">
@@ -206,7 +199,7 @@
                             <!-- Previous Page Link -->
                             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
                                 <a class="page-link"
-                                   href="{{ url_for('agendamentos') }}?page={{ page - 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   href="{{ url_for('agendamentos') }}?page={{ page - 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}&cliente_id={{ cliente_id }}&status={{ status }}"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -221,7 +214,7 @@
                             {% if start_page > 1 %}
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="{{ url_for('agendamentos') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">1</a>
+                                       href="{{ url_for('agendamentos') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}&cliente_id={{ cliente_id }}&status={{ status }}">1</a>
                                 </li>
                                 {% if start_page > 2 %}
                                     <li class="page-item disabled">
@@ -234,7 +227,7 @@
                             {% for page_num in range(start_page, end_page + 1) %}
                                 <li class="page-item {% if page_num == page %}active{% endif %}">
                                     <a class="page-link"
-                                       href="{{ url_for('agendamentos') }}?page={{ page_num }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ page_num }}</a>
+                                       href="{{ url_for('agendamentos') }}?page={{ page_num }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}&cliente_id={{ cliente_id }}&status={{ status }}">{{ page_num }}</a>
                                 </li>
                             {% endfor %}
 
@@ -247,14 +240,14 @@
                                 {% endif %}
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="{{ url_for('agendamentos') }}?page={{ total_pages }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ total_pages }}</a>
+                                       href="{{ url_for('agendamentos') }}?page={{ total_pages }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}&cliente_id={{ cliente_id }}&status={{ status }}">{{ total_pages }}</a>
                                 </li>
                             {% endif %}
 
                             <!-- Next Page Link -->
                             <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
                                 <a class="page-link"
-                                   href="{{ url_for('agendamentos') }}?page={{ page + 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   href="{{ url_for('agendamentos') }}?page={{ page + 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}&cliente_id={{ cliente_id }}&status={{ status }}"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
@@ -273,16 +266,23 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        /*
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+        // Adicionar os parâmetros de filtro ao formulário per_page
+        const perPageForm = document.getElementById('perPageForm');
+        if (perPageForm) {
+            const clienteIdInput = document.createElement('input');
+            clienteIdInput.type = 'hidden';
+            clienteIdInput.name = 'cliente_id';
+            clienteIdInput.value = '{{ cliente_id }}';
+            perPageForm.appendChild(clienteIdInput);
 
-        selectAllCheckbox.addEventListener('change', function () {
-            itemCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
-         */
+            const statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = '{{ status }}';
+            perPageForm.appendChild(statusInput);
+        }
+
+        // Outros scripts existentes...
     });
 </script>
 </body>
