@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 ENV CRM_NAME="CRM BarberPRO"
 ENV CRM_USER="admin"
-ENV CRM_PASSWORD="admin"
+ENV CRM_PASSWORD="admin321"
 ENV VERSION="1.0.3"
 
 ENV POSTGRES_HOST="209.145.51.166"
