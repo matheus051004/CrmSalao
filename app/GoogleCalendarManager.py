@@ -56,9 +56,9 @@ class GoogleCalendarManager:
                 calendarId=self.calendar_id,
                 body=event
             ).execute()
-            print(event)
-            print(f'Event created: {event.get("htmlLink")}')
-            return event
+            idd = event['id']
+            htmlLink = event['htmlLink']
+            return idd, htmlLink
         except Exception as e:
             print(f'An error occurred: {e}')
             return None

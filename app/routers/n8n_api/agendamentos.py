@@ -139,12 +139,15 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
         # google calendar
         gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
-        gcm.create_event(
+        idd, htmlLink = gcm.create_event(
             summary=titulo_auto,
             start_time=inicio_agendamento,
             end_time=fim_agendamento,
             description=description,
         )
+        novo_agendamento.google_event_id = idd
+        db.add(novo_agendamento)
+        db.commit()
 
         return response(
             True,
