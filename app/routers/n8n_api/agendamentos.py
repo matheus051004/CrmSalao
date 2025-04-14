@@ -190,8 +190,10 @@ async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
         agendamento.status = 'cancelado'
         db.commit()
 
+        profissional = db.query(Profissional).filter(Profissional.id == agendamento.profissional_id).first()
+
         # Remove o evento do Google Calendar
-        gcm = GoogleCalendarManager(agendamento.profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
         gcm.delete_event(agendamento.google_event_id)
 
         return response(True, "Agendamento cancelado com sucesso")
