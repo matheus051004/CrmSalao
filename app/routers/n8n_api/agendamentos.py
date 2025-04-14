@@ -3,7 +3,6 @@ from datetime import datetime, time, timedelta
 from typing import Tuple, Any, Optional, List, Dict
 
 from fastapi.routing import APIRouter
-from pkg_resources import find_nothing
 from sqlalchemy import func
 
 from app import Servico, Profissional

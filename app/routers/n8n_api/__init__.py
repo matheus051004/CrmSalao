@@ -7,5 +7,7 @@ n8n_api_router = APIRouter(
 )
 
 from app.routers.n8n_api import agendamentos
+from app.routers.n8n_api import leads
 
-n8n_api_router.include_router(agendamentos.agendamentos_router)
+n8n_api_router.include_router(agendamentos.agendamentos_router, tags=['agendamentos'])
+n8n_api_router.include_router(leads.leads_router, tags=['leads'])
