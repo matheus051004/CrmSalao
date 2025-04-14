@@ -16,6 +16,6 @@ class Agendamento(Base):
     description = Column(String)
     status = Column(String, nullable=False, default='agendado')
     google_event_id = Column(String, nullable=True)
-    metadata = Column(JSONB, nullable=True, default={})
+    client_metadata = Column(JSONB, nullable=True, default={})
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

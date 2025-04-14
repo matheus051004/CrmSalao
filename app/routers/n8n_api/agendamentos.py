@@ -130,7 +130,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
             title=titulo_auto,
             description=description,
             status="agendado",
-            metadata=metadata
+            client_metadata=metadata
         )
 
         db.add(novo_agendamento)
