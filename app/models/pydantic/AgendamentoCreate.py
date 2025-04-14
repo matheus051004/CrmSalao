@@ -9,5 +9,4 @@ class AgendamentoCreate(BaseModel):
     servicos_ids: List[int]  # Agora aceita uma lista de serviços
     date: str
     start_hour: str
-    title: Optional[str] = None
-    description: Optional[str] = None
+    metadata: Optional[dict]

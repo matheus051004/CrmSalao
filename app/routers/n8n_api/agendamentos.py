@@ -62,8 +62,9 @@ async def criar_agendamento(dados: AgendamentoCreate):
     servicos_ids = dados.servicos_ids
     date = dados.date
     start_hour = dados.start_hour
-    title = dados.title
-    description = dados.description
+    metadata = dados.metadata
+
+    description = "\n".join([f"{key}: {value}" for key, value in metadata.items()]) if metadata else ""
 
     # Validar a data
     sucesso, resultado = validar_data(date)
@@ -126,7 +127,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
             servicos=servicos_ids,
             start=inicio_agendamento,
             end=fim_agendamento,
-            title=title if title else titulo_auto,
+            title=titulo_auto,
             description=description,
             status="agendado"
         )
