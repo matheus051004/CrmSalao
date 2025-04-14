@@ -90,6 +90,7 @@
                                 <th scope="col">Profissional</th>
                                 <th scope="col">Início</th>
                                 <th scope="col">Término</th>
+                                <th scope="col">Ação</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -121,6 +122,16 @@
                                         <td>{{ get_profissional(item.profissional_id).name }}</td>
                                         <td>{{ reformat_date_time(item.start, '%d-%m %H:%M') }}</td>
                                         <td>{{ reformat_date_time(item.end, '%d-%m %H:%M') }}</td>
+                                        <td>
+                                            <div class="d-flex gap-2 flex-row">
+                                                <button class="btn btn-success"><i class="fa-solid fa-check"></i>
+                                                    Concluir
+                                                </button>
+                                                <button class="btn btn-danger"><i class="fa-solid fa-power-off"></i>
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% else %}
