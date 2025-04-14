@@ -7,6 +7,7 @@ from fastapi.routing import APIRouter
 from app import Servico, Profissional
 from app.database import SessionLocal
 from app.models.agendamentos import Agendamento
+from app.models.pydantic.AgendamentoCancel import AgendamentoCancel
 from app.models.pydantic.AgendamentoCreate import AgendamentoCreate
 from app.GoogleCalendarManager import GoogleCalendarManager
 
@@ -166,6 +167,11 @@ async def criar_agendamento(dados: AgendamentoCreate):
         return response(False, f"Erro ao criar agendamento: {str(e)}")
     finally:
         db.close()
+
+
+@agendamentos_router.post('/cancelar', name='n8n-cancelar-agendamento')
+async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
+    pass
 
 
 def validar_data(date_str: str) -> Tuple[bool, Any]:
