@@ -4,6 +4,7 @@ from typing import Tuple, Any, Optional, List, Dict
 
 from fastapi.routing import APIRouter
 from pkg_resources import find_nothing
+from sqlalchemy import func
 
 from app import Servico, Profissional
 from app.database import SessionLocal
@@ -278,11 +279,15 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
 
 
 @agendamentos_router.get('/', name='n8n-agendamentos')
-async def get_agendamentos(cliente_id: int, status='agendado'):
+async def get_agendamentos(cliente_id: int, status='agendado', date: str = '0000-00-00'):
     db = SessionLocal()
+    date = datetime.strptime(date, '%Y-%m-%d') if date != '0000-00-00' else datetime.now()
     try:
-        agendamentos = db.query(Agendamento).filter(Agendamento.cliente_id == cliente_id,
-                                                    Agendamento.status == status).all()
+        agendamentos = db.query(Agendamento).filter(
+            Agendamento.cliente_id == cliente_id,
+            Agendamento.status == status,
+            func.date(Agendamento.start) == date
+        ).all()
         if not agendamentos:
             return response(False, "Nenhum agendamento encontrado")
 
@@ -292,8 +297,10 @@ async def get_agendamentos(cliente_id: int, status='agendado'):
                 "id": agendamento.id,
                 "inicio": agendamento.start.strftime('%Y-%m-%d %H:%M'),
                 "fim": agendamento.end.strftime('%Y-%m-%d %H:%M'),
-                "servicos": ", ".join([servico.name for servico in db.query(Servico).filter(Servico.id.in_(agendamento.servicos)).all()]),
-                "profissional": db.query(Profissional).filter(Profissional.id == agendamento.profissional_id).first().name
+                "servicos": ", ".join(
+                    [servico.name for servico in db.query(Servico).filter(Servico.id.in_(agendamento.servicos)).all()]),
+                "profissional": db.query(Profissional).filter(
+                    Profissional.id == agendamento.profissional_id).first().name
             })
 
         return response(True, "Agendamentos encontrados", agendamentos_data)
