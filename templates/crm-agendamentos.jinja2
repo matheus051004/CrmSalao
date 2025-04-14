@@ -36,57 +36,54 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
+
                     <!-- Filtros -->
                     <div class="row mb-4">
                         <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="filterForm" method="get" class="row g-3">
-                                        <div class="col-md-4">
-                                            <label for="cliente_id" class="form-label">Cliente</label>
-                                            <select id="cliente_id" name="cliente_id" class="form-select">
-                                                <option value="0" {% if cliente_id == 0 %}selected{% endif %}>Todos os
-                                                    clientes
-                                                </option>
-                                                {% for cliente in clientes %}
-                                                    <option value="{{ cliente.id }}"
-                                                            {% if cliente_id == cliente.id %}selected{% endif %}>
-                                                        {{ cliente.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="status" class="form-label">Status</label>
-                                            <select id="status" name="status" class="form-select">
-                                                <option value="todos" {% if status == 'todos' %}selected{% endif %}>
-                                                    Todos
-                                                </option>
-                                                <option value="agendado"
-                                                        {% if status == 'agendado' %}selected{% endif %}>Agendado
-                                                </option>
-                                                <option value="concluido"
-                                                        {% if status == 'concluido' %}selected{% endif %}>Concluído
-                                                </option>
-                                                <option value="cancelado"
-                                                        {% if status == 'cancelado' %}selected{% endif %}>Cancelado
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4 d-flex align-items-end">
-                                            <button type="submit" class="btn btn-primary me-2">Filtrar</button>
-                                            <a href="{{ url_for('agendamentos') }}" class="btn btn-secondary">Limpar
-                                                filtros</a>
-                                        </div>
-
-                                        <!-- Campos ocultos para manter a paginação e ordenação -->
-                                        <input type="hidden" name="page" value="1">
-                                        <input type="hidden" name="per_page" value="{{ per_page }}">
-                                        <input type="hidden" name="order_by" value="{{ order_by }}">
-                                        <input type="hidden" name="order" value="{{ order }}">
-                                    </form>
+                            <form id="filterForm" method="get" class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="cliente_id" class="form-label">Cliente</label>
+                                    <select id="cliente_id" name="cliente_id" class="form-select">
+                                        <option value="0" {% if cliente_id == 0 %}selected{% endif %}>Todos os
+                                            clientes
+                                        </option>
+                                        {% for cliente in clientes %}
+                                            <option value="{{ cliente.id }}"
+                                                    {% if cliente_id == cliente.id %}selected{% endif %}>
+                                                {{ cliente.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                            </div>
+                                <div class="col-md-4">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select id="status" name="status" class="form-select">
+                                        <option value="todos" {% if status == 'todos' %}selected{% endif %}>
+                                            Todos
+                                        </option>
+                                        <option value="agendado"
+                                                {% if status == 'agendado' %}selected{% endif %}>Agendado
+                                        </option>
+                                        <option value="concluido"
+                                                {% if status == 'concluido' %}selected{% endif %}>Concluído
+                                        </option>
+                                        <option value="cancelado"
+                                                {% if status == 'cancelado' %}selected{% endif %}>Cancelado
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                                    <a href="{{ url_for('agendamentos') }}" class="btn btn-secondary">Limpar
+                                        filtros</a>
+                                </div>
+
+                                <!-- Campos ocultos para manter a paginação e ordenação -->
+                                <input type="hidden" name="page" value="1">
+                                <input type="hidden" name="per_page" value="{{ per_page }}">
+                                <input type="hidden" name="order_by" value="{{ order_by }}">
+                                <input type="hidden" name="order" value="{{ order }}">
+                            </form>
                         </div>
                     </div>
 
