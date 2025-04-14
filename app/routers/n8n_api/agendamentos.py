@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, time, timedelta
 from typing import Tuple, Any, Optional, List, Dict
 
@@ -7,6 +8,7 @@ from app import Servico, Profissional
 from app.database import SessionLocal
 from app.models.agendamentos import Agendamento
 from app.models.pydantic.AgendamentoCreate import AgendamentoCreate
+from app.GoogleCalendarManager import GoogleCalendarManager
 
 agendamentos_router = APIRouter(
     prefix="/agendamentos",
@@ -132,6 +134,15 @@ async def criar_agendamento(dados: AgendamentoCreate):
         db.add(novo_agendamento)
         db.commit()
         db.refresh(novo_agendamento)
+
+        # google calendar
+        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm.create_event(
+            summary=titulo_auto,
+            start_time=inicio_agendamento,
+            end_time=fim_agendamento,
+            description=description,
+        )
 
         return response(
             True,

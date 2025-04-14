@@ -1,49 +1,46 @@
-from datetime import datetime
+import base64
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+import json
+import os
 
 
 class GoogleCalendarManager:
-    def __init__(self, credentials_path, calendar_id='primary'):
+    def __init__(self, calendar_id='primary', credentials_json_b64:str=None):
         """
-        Initialize the Google Calendar Manager.
+        Initialize the Google Calendar Manager using credentials from environment variable.
 
         Args:
-            credentials_path (str): Path to the service account credentials JSON file
             calendar_id (str): ID of the calendar to manage (default is 'primary')
         """
         self.calendar_id = calendar_id
-        self.credentials = service_account.Credentials.from_service_account_file(
-            credentials_path,
-            scopes=['https://www.googleapis.com/auth/calendar']
-        )
-        self.service = build('calendar', 'v3', credentials=self.credentials)
 
-    def create_event(self, summary, start_time, end_time, description=None, location=None, attendees=None):
-        """
-        Create a new calendar event.
+        try:
+            credentials_json = base64.b64decode(credentials_json_b64).decode('utf-8')
+            credentials_dict = json.loads(credentials_json)
+            self.credentials = service_account.Credentials.from_service_account_info(
+                credentials_dict,
+                scopes=['https://www.googleapis.com/auth/calendar']
+            )
+            self.service = build('calendar', 'v3', credentials=self.credentials)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON in GOOGLE_CREDENTIALS: {e}")
+        except Exception as e:
+            raise Exception(f"Error creating credentials: {e}")
 
-        Args:
-            summary (str): Title of the event
-            start_time (datetime): Start time of the event
-            end_time (datetime): End time of the event
-            description (str, optional): Description of the event
-            location (str, optional): Location of the event
-            attendees (list, optional): List of attendee email addresses
-
-        Returns:
-            dict: Created event details
-        """
+    def create_event(self, summary, start_time, end_time, description=None, location=None, attendees=None,
+                     timezone='America/Sao_Paulo'):
+        """Create a calendar event."""
         event = {
             'summary': summary,
             'start': {
                 'dateTime': start_time.isoformat(),
-                'timeZone': 'UTC',
+                'timeZone': timezone,
             },
             'end': {
                 'dateTime': end_time.isoformat(),
-                'timeZone': 'UTC',
+                'timeZone': timezone,
             }
         }
 
@@ -66,15 +63,7 @@ class GoogleCalendarManager:
             return None
 
     def delete_event(self, event_id):
-        """
-        Delete a calendar event.
-
-        Args:
-            event_id (str): ID of the event to delete
-
-        Returns:
-            bool: True if deletion was successful, False otherwise
-        """
+        """Delete a calendar event."""
         try:
             self.service.events().delete(
                 calendarId=self.calendar_id,
@@ -85,27 +74,3 @@ class GoogleCalendarManager:
         except Exception as e:
             print(f'An error occurred: {e}')
             return False
-
-    def list_events(self, max_results=10):
-        """
-        List upcoming calendar events.
-
-        Args:
-            max_results (int): Maximum number of events to retrieve
-
-        Returns:
-            list: List of upcoming events
-        """
-        try:
-            now = datetime.utcnow().isoformat() + 'Z'
-            events_result = self.service.events().list(
-                calendarId=self.calendar_id,
-                timeMin=now,
-                maxResults=max_results,
-                singleEvents=True,
-                orderBy='startTime'
-            ).execute()
-            return events_result.get('items', [])
-        except Exception as e:
-            print(f'An error occurred: {e}')
-            return []
