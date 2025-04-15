@@ -162,7 +162,7 @@
                                         <td class="align-middle">{{ reformat_date_time(item.end, '%d-%m %H:%M') }}</td>
                                         <td>
                                             <div class="d-flex gap-2 flex-column">
-                                                <button class="btn btn-success"><i class="fa-solid fa-check"></i>
+                                                <button onclick="concluirAgendamento('{{ item.id }}', '{{ get_cliente(item.cliente_id).name }}')" class="btn btn-success"><i class="fa-solid fa-check"></i>
                                                     Concluir
                                                 </button>
                                                 <button class="btn btn-danger"><i class="fa-solid fa-power-off"></i>
@@ -269,9 +269,41 @@
             statusInput.value = '{{ status }}';
             perPageForm.appendChild(statusInput);
         }
-
-        // Outros scripts existentes...
     });
+
+    function concluirAgendamento(id, name) {
+        const concluirModal = new bootstrap.Modal(document.getElementById('concluirModal'));
+        document.querySelector('.cliente-name').textContent = name;
+        document.querySelector('.concluir').onclick = function () {
+        }
+        concluirModal.show();
+    }
 </script>
+
+
+<!-- Modal concluir agendamento -->
+<div class="modal fade" id="concluirModal" tabindex="-1" aria-labelledby="concluirModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="concluirModalLabel">Concluir agendamento: <span class="cliente-name"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control concluir-message"
+                          placeholder="Digite sua mensagem aqui...">
+                    {{ app_settings('msg_preference') }}
+                </textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success concluir">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

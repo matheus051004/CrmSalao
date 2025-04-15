@@ -13,6 +13,7 @@ def prepare_jinja(templates: Jinja2Templates):
     templates.env.globals['get_profissional'] = get_profissional
     templates.env.globals['get_servicos_string'] = get_servicos_string
     templates.env.globals['reformat_date_time'] = reformat_date_time
+    templates.env.globals['app_settings'] = app_settings
 
 
 def get_servico(service_id: int):
@@ -94,3 +95,17 @@ def reformat_date_time(date: datetime, new_format = '%d/%m/%Y %H:%M') -> str:
     if date:
         return date.strftime(new_format)
     return ''
+
+
+def app_settings(key: str, default=None):
+    from app.database import SessionLocal
+    db = SessionLocal()
+    from app.models.app_setting import AppSetting
+
+    try:
+        setting = db.query(AppSetting).filter(AppSetting.key == key).first()
+        if setting:
+            return setting.value
+        return default
+    finally:
+        db.close()
