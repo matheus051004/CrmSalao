@@ -21,7 +21,7 @@ async def concluir_agendamento(agendamento_confirm: AgendamentoComplete):
         agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_confirm.agendamento_id,
                                                    Agendamento.status == 'agendado').first()
         if not agendamento:
-            raise response(False, 'Agendamento não encontrado ou já foi concluído')
+            return response(False, 'Agendamento não encontrado ou já foi concluído')
 
         profissional = db.query(Profissional).filter(Profissional.id == agendamento.profissional_id).first()
         if not profissional:
