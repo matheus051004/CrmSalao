@@ -276,6 +276,34 @@
         const concluirModal = new bootstrap.Modal(document.getElementById('concluirModal'));
         document.querySelector('.cliente-name').textContent = name;
         document.querySelector('.concluir').onclick = function () {
+            const message = document.querySelector('.concluir-message').value;
+            const notify = document.getElementById('notifyCheck').checked;
+
+            const url = '{{ url_for('ajax-concluir-agendamento') }}'.replace('http', 'https')
+            fetch(url, {
+                'method': 'POST',
+                'headers': {
+                    'Content-Type': 'application/json'
+                },
+                'body': JSON.stringify({
+                    'agendamento_id': id,
+                    'message': message,
+                    'notify_cliente': notify
+                })
+            }).then(res => {
+                const notyf = new Notyf();
+                (async () => {
+                    const data = await res.json();
+                    if (data.success) {
+                        notyf.success(data.message)
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        notyf.error(data.message)
+                    }
+                })()
+            })
         }
         concluirModal.show();
     }

@@ -8,10 +8,10 @@ from sqlalchemy import func
 from app import Servico, Profissional
 from app.database import SessionLocal
 from app.models.agendamentos import Agendamento
-from app.models.pydantic.AgendamentoCancel import AgendamentoCancel
-from app.models.pydantic.AgendamentoCreate import AgendamentoCreate
+from app.models.pydantic.api.AgendamentoCancel import AgendamentoCancel
+from app.models.pydantic.api.AgendamentoCreate import AgendamentoCreate
 from app.GoogleCalendarManager import GoogleCalendarManager
-from app.models.pydantic.AgendamentoReschedule import AgendamentoReschedule
+from app.models.pydantic.api.AgendamentoReschedule import AgendamentoReschedule
 
 agendamentos_router = APIRouter(
     prefix="/agendamentos",
