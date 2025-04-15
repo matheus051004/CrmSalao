@@ -162,7 +162,8 @@
                                         <td class="align-middle">{{ reformat_date_time(item.end, '%d-%m %H:%M') }}</td>
                                         <td>
                                             <div class="d-flex gap-2 flex-column">
-                                                <button onclick="concluirAgendamento('{{ item.id }}', '{{ get_cliente(item.cliente_id).name }}')" class="btn btn-success"><i class="fa-solid fa-check"></i>
+                                                <button onclick="concluirAgendamento('{{ item.id }}', '{{ item.title }}')"
+                                                        class="btn btn-success"><i class="fa-solid fa-check"></i>
                                                     Concluir
                                                 </button>
                                                 <button class="btn btn-danger"><i class="fa-solid fa-power-off"></i>
@@ -291,6 +292,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="notifyCheck" checked>
+                    <label class="form-check-label" for="notifyCheck">
+                        Notificar cliente?
+                    </label>
+                </div>
                 <textarea class="form-control concluir-message" rows="10"
                           placeholder="Digite sua mensagem aqui...">{{ app_settings('msg_preference') }}</textarea>
             </div>
