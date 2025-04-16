@@ -313,7 +313,7 @@
         const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
         document.querySelector('.cliente-name').textContent = name;
         document.querySelector('.cancelar').onclick = function () {
-            const message = document.querySelector('.concluir-message').value;
+            const message = document.querySelector('.cancelar-message').value;
             const notify = document.getElementById('notifyCheck').checked;
 
             const url = '{{ url_for('ajax-cancelar-agendamento') }}'.replace('http', 'https')
