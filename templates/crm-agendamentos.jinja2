@@ -308,6 +308,43 @@
         }
         concluirModal.show();
     }
+
+    function cancelarAgendamento(id, name) {
+        const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+        document.querySelector('.cliente-name').textContent = name;
+        document.querySelector('.cancelar').onclick = function () {
+            const message = document.querySelector('.concluir-message').value;
+            const notify = document.getElementById('notifyCheck').checked;
+
+            const url = '{{ url_for('ajax-cancelar-agendamento') }}'.replace('http', 'https')
+            fetch(url, {
+                'method': 'POST',
+                'headers': {
+                    'Content-Type': 'application/json'
+                },
+                'body': JSON.stringify({
+                    'agendamento_id': id,
+                    'message': message,
+                    'notify_cliente': notify
+                })
+            }).then(res => {
+                const notyf = new Notyf();
+                (async () => {
+                    const data = await res.json();
+                    if (data.success) {
+                        notyf.success(data.message)
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        notyf.error(data.message)
+                    }
+                })()
+            })
+            cancelarModal.hide();
+        }
+        cancelarModal.show();
+    }
 </script>
 
 
@@ -333,6 +370,33 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-success concluir">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cancelar agendamento -->
+<div class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelarModalLabel">Cancelar agendamento: <span class="cliente-name"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="notifyCheck" checked>
+                    <label class="form-check-label" for="notifyCheck">
+                        Notificar cliente?
+                    </label>
+                </div>
+                <textarea class="form-control cancelar-message" rows="10"
+                          placeholder="Digite sua mensagem aqui...">{{ app_settings('msg_cancel') }}</textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success cancelar">Confirmar</button>
             </div>
         </div>
     </div>
