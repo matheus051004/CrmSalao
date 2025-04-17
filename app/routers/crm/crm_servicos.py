@@ -31,7 +31,7 @@ async def servicos(request: Request, page: int = 1, order_by: str = 'id', order:
     start_item = ((page - 1) * per_page) + 1 if total > 0 else 0
     end_item = min(page * per_page, total)
 
-    return g.templates.TemplateResponse('crm-clientes.jinja2', {
+    return g.templates.TemplateResponse('crm-servicos.jinja2', {
         'request': request,
         'sidebar': 'servicos',
         'items': items,

@@ -49,7 +49,7 @@
                             <input type="hidden" name="order_by" value="{{ order_by }}">
                             <input type="hidden" name="order" value="{{ order }}">
                             {% if search %}
-                                <a href="{{ url_for('clientes') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                <a href="{{ url_for('servicos') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
                                    class="btn btn-outline-secondary">
                                     <i class="fas fa-times"></i>
                                 </a>
@@ -89,7 +89,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">
-                                    <a href="{{ url_for('clientes') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
+                                    <a href="{{ url_for('servicos') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
                                         ID
                                         {% if order_by == 'id' %}
                                             <i class="fas fa-sort-{{ 'up' if order == 'asc' else 'down' }}"></i>
@@ -143,7 +143,7 @@
                             <!-- Previous Page Link -->
                             <li class="page-item {% if page <= 1 %}disabled{% endif %}">
                                 <a class="page-link"
-                                   href="{{ url_for('clientes') }}?page={{ page - 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   href="{{ url_for('servicos') }}?page={{ page - 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -158,7 +158,7 @@
                             {% if start_page > 1 %}
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="{{ url_for('clientes') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">1</a>
+                                       href="{{ url_for('servicos') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">1</a>
                                 </li>
                                 {% if start_page > 2 %}
                                     <li class="page-item disabled">
@@ -171,7 +171,7 @@
                             {% for page_num in range(start_page, end_page + 1) %}
                                 <li class="page-item {% if page_num == page %}active{% endif %}">
                                     <a class="page-link"
-                                       href="{{ url_for('clientes') }}?page={{ page_num }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ page_num }}</a>
+                                       href="{{ url_for('servicos') }}?page={{ page_num }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ page_num }}</a>
                                 </li>
                             {% endfor %}
 
@@ -184,14 +184,14 @@
                                 {% endif %}
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="{{ url_for('clientes') }}?page={{ total_pages }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ total_pages }}</a>
+                                       href="{{ url_for('servicos') }}?page={{ total_pages }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ total_pages }}</a>
                                 </li>
                             {% endif %}
 
                             <!-- Next Page Link -->
                             <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
                                 <a class="page-link"
-                                   href="{{ url_for('clientes') }}?page={{ page + 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   href="{{ url_for('servicos') }}?page={{ page + 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
