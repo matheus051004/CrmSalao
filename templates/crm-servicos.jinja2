@@ -79,7 +79,7 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                               onclick=""
+                                               onclick="deleteServico({{ item.id }})"
                                                class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -167,6 +167,24 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
+    function deleteServico(id) {
+        if (confirm("Você tem certeza que deseja excluir este serviço?")) {
+            fetch(`/servicos/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert("Erro ao excluir o serviço.");
+                }
+            });
+        }
+    }
 </script>
 </body>
 </html>
