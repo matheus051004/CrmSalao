@@ -36,14 +36,31 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ url_for('add-servico') }}">
+                    <form method="POST" action="">
                         <div class="mb-3">
                             <label for="servico" class="form-label">Serviço</label>
                             <input type="text" class="form-control" id="servico" name="servico" required>
                         </div>
                         <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição (opcional)</label>
+                            <input type="text" class="form-control" id="descricao" name="descricao">
+                        </div>
+                        <div class="mb-3">
                             <label for="preco" class="form-label">Preço</label>
                             <input type="number" class="form-control" id="preco" name="preco" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="minutos" class="form-label">Duração do serviço (minutos)</label>
+                            <input type="number" class="form-control" id="minutos" name="minutos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sexo" class="form-label">Público</label>
+                            <select class="form-select" id="sexo" name="sexo" required>
+                                <option value="" selected disabled>Selecione o público alvo</option>
+                                <option value="feminino">Feminino</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="unissex">Unissex</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Adicionar</button>
                     </form>
