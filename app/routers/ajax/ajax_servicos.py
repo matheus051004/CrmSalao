@@ -4,6 +4,7 @@ from sqlalchemy import text
 
 from app import Servico, Agendamento, Profissional
 from app.database import SessionLocal
+from app.models.pydantic.ajax.ServicoDelete import ServicoDelete
 
 router = APIRouter(
     prefix="/ajax-servicos",
@@ -11,12 +12,11 @@ router = APIRouter(
 )
 
 
-@router.post('delete-servico', name='ajax-delete-servico')
-async def delete_servico(request: Request):
-    json = await request.json()
+@router.delete('delete-servico', name='ajax-delete-servico')
+async def delete_servico(request: Request, servico: ServicoDelete):
     db = SessionLocal()
     try:
-        servico = db.query(Servico).filter(Servico.id == json.servico_id).first()
+        servico = db.query(Servico).filter(Servico.id == servico.servico_id).first()
 
         if not servico:
             return response(False, 'Serviço não encontrado', None)
