@@ -36,15 +36,15 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                <div class="row">
-                    <div class="col-10"></div>
-                    <div class="col-2">
-                        <button class="btn btn-primary w-100">
-                            <i class="fa-solid fa-plus"></i>
-                            Novo Serviço
-                        </button>
+                    <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                            <button class="btn btn-primary w-100">
+                                <i class="fa-solid fa-plus"></i>
+                                Novo Serviço
+                            </button>
+                        </div>
                     </div>
-                </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -168,20 +168,32 @@
 
 <script>
     function deleteServico(id) {
-        if (confirm("Você tem certeza que deseja excluir este serviço?")) {
-            fetch(`/servicos/${id}`, {
+        if (confirm("Você tem certeza que deseja excluir este serviço?\n\n- Todos os agendamentos relacionados a este serviço também serão excluídos.")) {
+            const url = `{{ url_for('ajax-delete-servico') }}`.replace('http', 'https');
+            const body = JSON.stringify({id: id});
+
+            fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: body
             })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    alert("Erro ao excluir o serviço.");
-                }
-            });
+                .then(response => {
+                    (async () => {
+                        const notyf = new Notyf();
+                        const json = await response.json();
+
+                        if (json.success) {
+                            notyf.success(json.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            notyf.error(json.message);
+                        }
+                    })()
+                });
         }
     }
 </script>
