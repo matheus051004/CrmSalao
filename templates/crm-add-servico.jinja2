@@ -37,7 +37,19 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-
+                        <div class="col-6 col-md-12">
+                            <form method="POST" action="{{ url_for('crm_add_servico', crm_id=crm_id) }}">
+                                <div class="mb-3">
+                                    <label for="servico" class="form-label">Serviço</label>
+                                    <input type="text" class="form-control" id="servico" name="servico" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="preco" class="form-label">Preço</label>
+                                    <input type="number" class="form-control" id="preco" name="preco" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Adicionar</button>
+                            </form>
+                        </div>
                     </div>
                 </div> <!-- card-body end -->
             </div> <!-- card end -->
