@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.delete('delete-servico', name='ajax-delete-servico')
+@router.post('delete-servico', name='ajax-delete-servico')
 async def delete_servico(request: Request):
     json = await request.json()
     db = SessionLocal()
