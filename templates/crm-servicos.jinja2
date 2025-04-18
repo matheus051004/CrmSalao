@@ -170,7 +170,7 @@
     function deleteServico(id) {
         if (confirm("Você tem certeza que deseja excluir este serviço?\n\n- Todos os agendamentos relacionados a este serviço também serão excluídos.")) {
             const url = `{{ url_for('ajax-delete-servico') }}`.replace('http', 'https');
-            const body = JSON.stringify({id: id});
+            const body = JSON.stringify({servico_id: id});
 
             fetch(url, {
                 method: 'DELETE',
