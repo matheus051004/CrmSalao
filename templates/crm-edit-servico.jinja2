@@ -74,6 +74,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const sexoSelectOp = document.querySelector('option[value="{{ servico.sexo }}"]');
+        if (sexoSelectOp) {
+            sexoSelectOp.selected = true;
+        }
+
         const form = document.getElementById('form');
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
