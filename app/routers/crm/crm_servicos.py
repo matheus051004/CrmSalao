@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 import app.glob as g
 from app import Servico
 from app.database import SessionLocal
+from app.models.pydantic.crm import ServicoAdd
 
 router = APIRouter(
     prefix="/servicos",
@@ -67,3 +68,45 @@ def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page:
         return items, total, per_page
     finally:
         db.close()
+
+
+@router.get('/add-servico', name='add-servico', response_class=HTMLResponse)
+async def add_servico(request: Request):
+    return g.templates.TemplateResponse('crm-add-servico.jinja2', {
+        'request': request,
+        'sidebar': 'servicos',
+    })
+
+
+@router.post('/add-servico', name='add-servico-post')
+async def add_servico_post(servico_add: ServicoAdd):
+    db = SessionLocal()
+    sexos = ['unissex', 'feminino', 'masculino']
+
+    if servico_add.sexo not in sexos:
+        return response(False, 'Sexo inválido. Aceito: unissex, feminino ou masculino.')
+
+    try:
+        servico = Servico(
+            name=servico_add.servico,
+            description=servico_add.descricao,
+            price=servico_add.preco,
+            minutes=servico_add.minutos,
+            sexo=servico_add.sexo
+        )
+
+        db.add(servico)
+        db.commit()
+        message = 'Serviço registrado com sucesso!'
+    finally:
+        db.close()
+
+    return response(True, message)
+
+
+def response(success=True, message="", data=None):
+    return {
+        "success": success,
+        "message": message,
+        "data": data
+    }
