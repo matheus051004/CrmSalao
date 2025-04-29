@@ -106,7 +106,7 @@ async def add_servico_post(servico_add: ServicoAdd):
 
 
 @router.get('/edit-servico/{idd}', name='edit-servico', response_class=HTMLResponse)
-async def add_servico(request: Request, idd: int):
+async def edit_servico(request: Request, idd: int):
     db = SessionLocal()
     try:
         servico = db.query(Servico).filter(Servico.id == idd).first()
@@ -124,6 +124,35 @@ async def add_servico(request: Request, idd: int):
         'sidebar': 'servicos',
         'servico': servico
     })
+
+
+@router.post('/edit-servico/{idd}', name='edit-servico-post')
+async def edit_servico_post(request: Request, idd: int, servico_add: ServicoAdd):
+    db = SessionLocal()
+    try:
+        servico = db.query(Servico).filter(Servico.id == idd).first()
+        # se não houver serviço com esse ID
+        if not servico:
+            return RedirectResponse(
+                url=request.url_for('servicos'),
+            )
+    finally:
+        db.close()
+
+    servico.name = servico_add.servico
+    servico.description = servico_add.descricao
+    servico.price = servico_add.preco
+    servico.minutes = servico_add.minutos
+    servico.sexo = servico_add.sexo
+
+    db = SessionLocal()
+    try:
+        db.add(servico)
+        db.commit()
+    finally:
+        db.close()
+
+    return response(True, 'Serviço editado com sucesso!')
 
 
 def response(success=True, message="", data=None):
