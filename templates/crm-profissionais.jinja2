@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Profissionais | {{ crm_name }}</title>
+    {% include 'parts/head.jinja2' %}
+</head>
+<body>
+<!-- Mobile Header -->
+<div class="mobile-header">
+    <button class="navbar-toggler" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h4 class="m-0"><i class="fas fa-cut me-2"></i> {{ crm_name }}</h4>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+{% include 'parts/sidebar.jinja2' %}
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="d-lg-none mb-3">
+        <button class="btn btn-primary btn-sm" id="mobileToggle">
+            <i class="fas fa-bars me-1"></i> Menu
+        </button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Profissionais</h2>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                            <button onclick="window.location.href = '{{ url_for("add-servico") }}'"
+                                    class="btn btn-primary w-100">
+                                <i class="fa-solid fa-plus"></i>
+                                Novo Profissional
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">
+                                    <a href="{{ url_for('profissionais') }}?page={{ page }}&per_page={{ per_page }}&order_by=id&order={{ 'asc' if order_by == 'id' and order == 'desc' else 'desc' }}">
+                                        ID
+                                        {% if order_by == 'id' %}
+                                            <i class="fas fa-sort-{{ 'up' if order == 'asc' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <td>Nome</td>
+                                <td>Preço</td>
+                                <td>Duração</td>
+                                <td>Público</td>
+                                <td>Ações</td>
+                            </thead>
+                            <tbody>
+                            {% if items %}
+                                {% for item in items %}
+
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Nenhum profissional encontrado.</td>
+                                </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Start -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Page Link -->
+                            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                <a class="page-link"
+                                   href="{{ url_for('profissionais') }}?page={{ page - 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <!-- Page Number Links -->
+                            {% set page_range = 2 %}
+                            {% set start_page = [1, page - page_range]|max %}
+                            {% set end_page = [total_pages, page + page_range]|min %}
+
+                            <!-- Primeira página sempre -->
+                            {% if start_page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="{{ url_for('profissionais') }}?page=1&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">1</a>
+                                </li>
+                                {% if start_page > 2 %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link">...</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            <!-- Páginas ao redor da página atual -->
+                            {% for page_num in range(start_page, end_page + 1) %}
+                                <li class="page-item {% if page_num == page %}active{% endif %}">
+                                    <a class="page-link"
+                                       href="{{ url_for('profissionais') }}?page={{ page_num }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ page_num }}</a>
+                                </li>
+                            {% endfor %}
+
+                            <!-- Última página sempre -->
+                            {% if end_page < total_pages %}
+                                {% if end_page < total_pages - 1 %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link">...</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="{{ url_for('profissionais') }}?page={{ total_pages }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}">{{ total_pages }}</a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Next Page Link -->
+                            <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                <a class="page-link"
+                                   href="{{ url_for('profissionais') }}?page={{ page + 1 }}&per_page={{ per_page }}&order_by={{ order_by }}&order={{ order }}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- Pagination End -->
+
+                </div> <!-- card-body end -->
+            </div> <!-- card end -->
+        </div> <!-- col end -->
+    </div> <!-- row end -->
+</div> <!-- main-content end -->
+
+{% include 'parts/foot.jinja2' %}
+
+<script>
+    function deleteServico(id) {
+        if (confirm("Você tem certeza que deseja excluir este serviço?\n\n- Todos os agendamentos relacionados a este serviço também serão excluídos.")) {
+            const url = `{{ url_for('ajax-delete-servico') }}`.replace('http', 'https');
+            const body = JSON.stringify({servico_id: id});
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            })
+                .then(response => {
+                    (async () => {
+                        const notyf = new Notyf();
+                        const json = await response.json();
+
+                        if (json.success) {
+                            notyf.success(json.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            notyf.error(json.message);
+                        }
+                    })()
+                });
+        }
+    }
+</script>
+</body>
+</html>
