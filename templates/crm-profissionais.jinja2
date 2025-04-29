@@ -60,7 +60,6 @@
                                 </th>
                                 <td>Nome</td>
                                 <td>Serviços</td>
-                                <td>Horários</td>
                                 <td>Ações</td>
                             </thead>
                             <tbody>
@@ -72,6 +71,17 @@
                                         <td class="align-middle">
                                             <a href="javascript:void(0)"
                                                onclick="alert(`{{ get_servicos_string(item.services) }}`)">VER</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('edit-servico', idd=item.id) }}"
+                                               class="btn btn-sm btn-warning">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <a href="javascript:void(0)"
+                                               onclick="deleteServico({{ item.id }})"
+                                               class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
