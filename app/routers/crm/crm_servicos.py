@@ -3,6 +3,7 @@ import math
 from fastapi import APIRouter
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
+from starlette.responses import RedirectResponse
 
 import app.glob as g
 from app import Servico
@@ -102,6 +103,27 @@ async def add_servico_post(servico_add: ServicoAdd):
         db.close()
 
     return response(True, message)
+
+
+@router.get('/edit-servico/{idd}', name='edit-servico', response_class=HTMLResponse)
+async def add_servico(request: Request, idd: int):
+    db = SessionLocal()
+    try:
+        servico = db.query(Servico).filter(Servico.id == idd).first()
+
+        # se não houver serviço com esse ID
+        if not servico:
+            return RedirectResponse(
+                url=request.url_for('servicos'),
+            )
+    finally:
+        db.close()
+
+    return g.templates.TemplateResponse('crm-edit-servico.jinja2', {
+        'request': request,
+        'sidebar': 'servicos',
+        'servico': servico
+    })
 
 
 def response(success=True, message="", data=None):
