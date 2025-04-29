@@ -43,15 +43,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="descricao" class="form-label">Descrição (opcional)</label>
-                            <textarea class="form-control" id="descricao" name="descricao"></textarea>
+                            <textarea class="form-control" id="descricao" name="descricao">{{ servico.description }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="preco" class="form-label">Preço</label>
-                            <input type="number" class="form-control" id="preco" name="preco" required>
+                            <input type="number" class="form-control" id="preco" name="preco" required value="{{ servico.price }}">
                         </div>
                         <div class="mb-3">
                             <label for="minutos" class="form-label">Duração do serviço (minutos)</label>
-                            <input type="number" class="form-control" id="minutos" name="minutos" required>
+                            <input type="number" class="form-control" id="minutos" name="minutos" required value="{{ servico.minutes }}">
                         </div>
                         <div class="mb-3">
                             <label for="sexo" class="form-label">Público</label>
