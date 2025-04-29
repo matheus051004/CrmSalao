@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse
 import app.glob as g
 from app import Servico
 from app.database import SessionLocal
-from app.models.pydantic.crm import ServicoAdd
+from app.models.pydantic.crm.ServicoAdd import ServicoAdd
 
 router = APIRouter(
     prefix="/servicos",
