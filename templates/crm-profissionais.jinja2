@@ -67,7 +67,9 @@
                             <tbody>
                             {% if items %}
                                 {% for item in items %}
-
+                                    <tr>
+                                    <td>{{ item.id }}</td>
+                                    </tr>
                                 {% endfor %}
                             {% else %}
                                 <tr>
