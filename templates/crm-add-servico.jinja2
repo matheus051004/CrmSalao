@@ -43,7 +43,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="descricao" class="form-label">Descrição (opcional)</label>
-                            <input type="text" class="form-control" id="descricao" name="descricao">
+                            <textarea class="form-control" id="descricao" name="descricao"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="preco" class="form-label">Preço</label>
@@ -71,5 +71,35 @@
 </div> <!-- main-content end -->
 
 {% include 'parts/foot.jinja2' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const json = await response.json()
+
+                const notyf = new Notyf();
+                if (json.success) {
+                    notyf.success(json.message)
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao adicionar serviço. Tente novamente.');
+            }
+        });
+    })
+</script>
 </body>
 </html>
