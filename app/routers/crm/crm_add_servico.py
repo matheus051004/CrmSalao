@@ -21,10 +21,14 @@ async def add_servico(request: Request):
     })
 
 
-@router.post('/add-servico', name='add-servico-post', response_class=HTMLResponse)
-async def add_servico_post(request: Request, servico_add: ServicoAdd):
+@router.post('/add-servico', name='add-servico-post')
+async def add_servico_post(servico_add: ServicoAdd):
     db = SessionLocal()
-    message = ''
+    sexos = ['unissex', 'feminino', 'masculino']
+
+    if servico_add.sexo not in sexos:
+        return response(False, 'Sexo inválido. Aceito: unissex, feminino ou masculino.')
+
     try:
         servico = Servico(
             name=servico_add.servico,
@@ -40,8 +44,12 @@ async def add_servico_post(request: Request, servico_add: ServicoAdd):
     finally:
         db.close()
 
-    return g.templates.TemplateResponse('crm-add-servico.jinja2', {
-        'request': request,
-        'sidebar': 'servicos',
-        'message': message,
-    })
+    return response(True, message)
+
+
+def response(success=True, message="", data=None):
+    return {
+        "success": success,
+        "message": message,
+        "data": data
+    }
