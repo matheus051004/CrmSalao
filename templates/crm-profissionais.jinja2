@@ -59,17 +59,20 @@
                                     </a>
                                 </th>
                                 <td>Nome</td>
-                                <td>Preço</td>
-                                <td>Duração</td>
-                                <td>Público</td>
+                                <td>Serviços</td>
+                                <td>Horários</td>
                                 <td>Ações</td>
                             </thead>
                             <tbody>
                             {% if items %}
                                 {% for item in items %}
                                     <tr>
-                                    <td>{{ item.id }}</td>
-                                    <td>{{ item.name }}</td>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td class="align-middle">
+                                            <a href="javascript:void(0)"
+                                               onclick="alert(`{{ get_servicos_string(item.services) }}`)">VER</a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% else %}
