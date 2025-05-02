@@ -79,6 +79,23 @@ async def profissional_add_post(add: ProfissionalAdd):
         db.close()
 
 
+@router.get('/edit-profissional/{idd}', name='edit-profissional', response_class=HTMLResponse)
+async def profissional_edit(request: Request, idd: int):
+    db = SessionLocal()
+    try:
+        profissional = db.query(Profissional).filter(Profissional.id == idd).first()
+        servicos = db.query(Servico).all()
+    finally:
+        db.close()
+
+    return g.templates.TemplateResponse('crm-profissional-edit.jinja2', {
+        'request': request,
+        'sidebar': 'profissionais',
+        'servicos': servicos,
+        'profissional': profissional
+    })
+
+
 # db functions
 def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
     db = SessionLocal()

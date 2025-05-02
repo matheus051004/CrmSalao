@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Editar profissional | {{ crm_name }}</title>
+    {% include 'parts/head.jinja2' %}
+</head>
+<body>
+<!-- Mobile Header -->
+<div class="mobile-header">
+    <button class="navbar-toggler" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h4 class="m-0"><i class="fas fa-cut me-2"></i> {{ crm_name }}</h4>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+{% include 'parts/sidebar.jinja2' %}
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="d-lg-none mb-3">
+        <button class="btn btn-primary btn-sm" id="mobileToggle">
+            <i class="fas fa-bars me-1"></i> Menu
+        </button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Editar profissional</h2>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form id="form">
+                        <div class="mb-3">
+                            <label for="servico" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required value="{{ profissional.name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Google calendar ID</label>
+                            <textarea class="form-control" id="calendar_id" name="calendar_id"
+                                      placeholder="Insira o ID da agenda do profissional">{{ profissional.calendar_id }}</textarea>
+                        </div>
+
+                        <!-- Select serviços -->
+                        <div class="mb-3">
+                            <label for="servicos" class="form-label">Serviços</label>
+                            <select class="form-select" id="servicos" name="servicos" required multiple>
+                                {% for servico in servicos %}
+                                    <option value="{{ servico.id }}">{{ servico.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Horários de atendimento</label>
+                            <input type="hidden" id="horarios_json" name="horarios"
+                                   value='{"0":[],"1":[],"2":[],"3":[],"4":[],"5":[],"6":[]}'>
+
+                            <div class="accordion" id="horariosProfissional">
+                                <!-- Segunda -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#segunda"
+                                                aria-expanded="false" aria-controls="segunda">
+                                            Segunda-feira <span class="badge bg-secondary ms-2 intervalos-count"
+                                                                data-day="0">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="segunda" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="0"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="0">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Terça -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#terca" aria-expanded="false"
+                                                aria-controls="terca">
+                                            Terça-feira <span class="badge bg-secondary ms-2 intervalos-count"
+                                                              data-day="1">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="terca" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="1"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="1">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quarta -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#quarta" aria-expanded="false"
+                                                aria-controls="quarta">
+                                            Quarta-feira <span class="badge bg-secondary ms-2 intervalos-count"
+                                                               data-day="2">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="quarta" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="2"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="2">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quinta -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#quinta" aria-expanded="false"
+                                                aria-controls="quinta">
+                                            Quinta-feira <span class="badge bg-secondary ms-2 intervalos-count"
+                                                               data-day="3">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="quinta" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="3"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="3">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sexta -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#sexta" aria-expanded="false"
+                                                aria-controls="sexta">
+                                            Sexta-feira <span class="badge bg-secondary ms-2 intervalos-count"
+                                                              data-day="4">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="sexta" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="4"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="4">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sábado -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#sabado" aria-expanded="false"
+                                                aria-controls="sabado">
+                                            Sábado <span class="badge bg-secondary ms-2 intervalos-count" data-day="5">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="sabado" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="5"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="5">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Domingo -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#domingo"
+                                                aria-expanded="false" aria-controls="domingo">
+                                            Domingo <span class="badge bg-secondary ms-2 intervalos-count" data-day="6">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="domingo" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="6"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="6">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </form>
+                </div> <!-- card-body end -->
+            </div> <!-- card end -->
+        </div> <!-- col end -->
+    </div> <!-- row end -->
+</div> <!-- main-content end -->
+
+{% include 'parts/foot.jinja2' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            const servicosSelect = document.getElementById('servicos');
+            const selectedServicos = Array.from(servicosSelect.selectedOptions).map(option => option.value);
+
+            const data = Object.fromEntries(formData.entries());
+            data.horarios = JSON.parse(data.horarios);
+            data.servicos = selectedServicos;
+
+            try {
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const json = await response.json()
+
+                const notyf = new Notyf();
+                if (json.success) {
+                    notyf.success(json.message)
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 2000);
+                } else {
+                    notyf.error(json.message)
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro. Tente novamente.');
+            }
+        });
+    })
+
+    // Gerenciamento dos horários
+    document.addEventListener('DOMContentLoaded', () => {
+        // Estrutura de dados para os horários
+        let horarios = {
+            "0": [], // Segunda
+            "1": [], // Terça
+            "2": [], // Quarta
+            "3": [], // Quinta
+            "4": [], // Sexta
+            "5": [], // Sábado
+            "6": []  // Domingo
+        };
+
+        // Exemplo de horários iniciais (opcional)
+        const horariosIniciais = {{ profissional.horarios|tojson }};
+
+        // Função para criar um novo intervalo HTML
+        function createIntervalElement(day, inicio = "09:00", fim = "18:00", index) {
+            const intervalDiv = document.createElement('div');
+            intervalDiv.className = 'row mb-2 interval-row';
+            intervalDiv.dataset.index = index;
+
+            intervalDiv.innerHTML = `
+            <div class="col-5">
+                <input type="time" class="form-control form-control-sm time-inicio" value="${inicio}" required>
+            </div>
+            <div class="col-5">
+                <input type="time" class="form-control form-control-sm time-fim" value="${fim}" required>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-interval" data-day="${day}" data-index="${index}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+            return intervalDiv;
+        }
+
+        // Função para atualizar o contador de intervalos
+        function updateIntervalCount(day) {
+            const count = horarios[day].length;
+            const badge = document.querySelector(`.intervalos-count[data-day="${day}"]`);
+            badge.textContent = `${count} ${count === 1 ? 'intervalo' : 'intervalos'}`;
+
+            // Mudar a cor do badge com base na quantidade de intervalos
+            if (count > 0) {
+                badge.classList.remove('bg-secondary');
+                badge.classList.add('bg-success');
+            } else {
+                badge.classList.remove('bg-success');
+                badge.classList.add('bg-secondary');
+            }
+        }
+
+        // Função para atualizar o input hidden com os dados de horários
+        function updateHorariosInput() {
+            document.getElementById('horarios_json').value = JSON.stringify(horarios);
+        }
+
+        // Função para renderizar todos os intervalos de um dia
+        function renderIntervals(day) {
+            const container = document.querySelector(`.intervals-container[data-day="${day}"]`);
+            container.innerHTML = '';
+
+            horarios[day].forEach((intervalo, index) => {
+                const el = createIntervalElement(day, intervalo.inicio, intervalo.fim, index);
+                container.appendChild(el);
+
+                // Adicionar eventos aos novos inputs
+                const inicioInput = el.querySelector('.time-inicio');
+                const fimInput = el.querySelector('.time-fim');
+
+                inicioInput.addEventListener('change', (e) => {
+                    horarios[day][index].inicio = e.target.value;
+                    updateHorariosInput();
+                });
+
+                fimInput.addEventListener('change', (e) => {
+                    horarios[day][index].fim = e.target.value;
+                    updateHorariosInput();
+                });
+            });
+
+            updateIntervalCount(day);
+            updateHorariosInput();
+        }
+
+        // Inicializar os horários com os dados de exemplo
+        Object.entries(horariosIniciais).forEach(([day, intervals]) => {
+            horarios[day] = [...intervals];
+            renderIntervals(day);
+        });
+
+        // Adicionar eventos para adicionar novos intervalos
+        document.querySelectorAll('.add-interval').forEach(button => {
+            button.addEventListener('click', () => {
+                const day = button.dataset.day;
+                const newIndex = horarios[day].length;
+
+                horarios[day].push({inicio: "09:00", fim: "18:00"});
+                renderIntervals(day);
+            });
+        });
+
+        // Evento de delegação para remover intervalos
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-interval') || e.target.closest('.remove-interval')) {
+                const button = e.target.classList.contains('remove-interval') ? e.target : e.target.closest('.remove-interval');
+                const day = button.dataset.day;
+                const index = parseInt(button.dataset.index);
+
+                horarios[day].splice(index, 1);
+                renderIntervals(day);
+            }
+        });
+
+        // Atualizar o campo oculto do formulário antes do envio
+        document.getElementById('form').addEventListener('submit', () => {
+            updateHorariosInput();
+        });
+    });
+</script>
+</body>
+</html>

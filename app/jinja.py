@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -14,6 +15,8 @@ def prepare_jinja(templates: Jinja2Templates):
     templates.env.globals['get_servicos_string'] = get_servicos_string
     templates.env.globals['reformat_date_time'] = reformat_date_time
     templates.env.globals['app_settings'] = app_settings
+
+    templates.env.filters['tojson'] = json.dumps
 
 
 def get_servico(service_id: int):
