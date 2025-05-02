@@ -61,7 +61,7 @@ async def profissional_add(request: Request):
     })
 
 
-@router.post('/add-profissional', name='add-profissional-post', response_class=HTMLResponse)
+@router.post('/add-profissional', name='add-profissional-post')
 async def profissional_add_post(add: ProfissionalAdd):
     db = SessionLocal()
     try:
