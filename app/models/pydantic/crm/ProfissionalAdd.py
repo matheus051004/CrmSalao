@@ -5,4 +5,4 @@ class ProfissionalAdd(BaseModel):
     nome: str
     calendar_id: str
     servicos: list[int]
-    horarios: list[dict]
+    horarios: dict[str, any]
