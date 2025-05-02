@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 import app.glob as g
 from app import Profissional, Servico
 from app.database import SessionLocal
+from app.models.pydantic.crm.ProfissionalAdd import ProfissionalAdd
 
 router = APIRouter(
     prefix="/profissionais",
@@ -47,7 +48,6 @@ async def profissionais(request: Request, page: int = 1, order_by: str = 'id', o
 
 @router.get('/add-profissional', name='add-profissional', response_class=HTMLResponse)
 async def profissional_add(request: Request):
-
     db = SessionLocal()
     try:
         servicos = db.query(Servico).all()
@@ -61,6 +61,24 @@ async def profissional_add(request: Request):
     })
 
 
+@router.post('/add-profissional', name='add-profissional-post', response_class=HTMLResponse)
+async def profissional_add_post(add: ProfissionalAdd):
+    db = SessionLocal()
+    try:
+        profissional = Profissional(
+            name=add.name,
+            calendar_id=add.calendar_id,
+            services=add.servicos,
+            horarios=add.horarios
+        )
+        db.add(profissional)
+        db.commit()
+
+        return response(True, 'Profissional registrado com sucesso', None)
+    finally:
+        db.close()
+
+
 # db functions
 def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
     db = SessionLocal()
@@ -68,7 +86,8 @@ def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page:
         query = db.query(Profissional)
 
         # Aplicar ordenação
-        query = query.order_by(getattr(Profissional, order_by).desc() if order == 'desc' else getattr(Profissional, order_by))
+        query = query.order_by(
+            getattr(Profissional, order_by).desc() if order == 'desc' else getattr(Profissional, order_by))
 
         total = query.count()
         items = query.offset((page - 1) * per_page).limit(per_page).all()
