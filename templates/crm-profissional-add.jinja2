@@ -43,7 +43,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="descricao" class="form-label">Google calendar ID</label>
-                            <textarea class="form-control" id="calendar_id" name="calendar_id" placeholder="Insira o ID da agenda do profissional"></textarea>
+                            <textarea class="form-control" id="calendar_id" name="calendar_id"
+                                      placeholder="Insira o ID da agenda do profissional"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="sexo" class="form-label">Público</label>
@@ -60,29 +61,7 @@
                                    value='{"0":[],"1":[],"2":[],"3":[],"4":[],"5":[],"6":[]}'>
 
                             <div class="accordion" id="horariosProfissional">
-                                <!-- Domingo -->
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#domingo"
-                                                aria-expanded="false" aria-controls="domingo">
-                                            Domingo <span class="badge bg-secondary ms-2 intervalos-count" data-day="0">0 intervalos</span>
-                                        </button>
-                                    </h2>
-                                    <div id="domingo" class="accordion-collapse collapse"
-                                         data-bs-parent="#horariosProfissional">
-                                        <div class="accordion-body">
-                                            <div class="intervals-container" data-day="0"></div>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
-                                                    data-day="0">
-                                                <i class="fas fa-plus"></i> Adicionar intervalo
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Segunda-feira -->
+                                <!-- Segunda -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
@@ -105,7 +84,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Terça-feira -->
+                                <!-- Terça -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
@@ -128,7 +107,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Quarta-feira -->
+                                <!-- Quarta -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
@@ -151,7 +130,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Quinta-feira -->
+                                <!-- Quinta -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
@@ -174,7 +153,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Sexta-feira -->
+                                <!-- Sexta -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button"
@@ -213,6 +192,28 @@
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-primary mt-2 add-interval"
                                                     data-day="6">
+                                                <i class="fas fa-plus"></i> Adicionar intervalo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Domingo -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#domingo"
+                                                aria-expanded="false" aria-controls="domingo">
+                                            Domingo <span class="badge bg-secondary ms-2 intervalos-count" data-day="0">0 intervalos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="domingo" class="accordion-collapse collapse"
+                                         data-bs-parent="#horariosProfissional">
+                                        <div class="accordion-body">
+                                            <div class="intervals-container" data-day="0"></div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary mt-2 add-interval"
+                                                    data-day="0">
                                                 <i class="fas fa-plus"></i> Adicionar intervalo
                                             </button>
                                         </div>
@@ -268,13 +269,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Estrutura de dados para os horários
         let horarios = {
-            "0": [], // Domingo
-            "1": [], // Segunda
-            "2": [], // Terça
-            "3": [], // Quarta
-            "4": [], // Quinta
-            "5": [], // Sexta
-            "6": []  // Sábado
+            "0": [], // Segunda
+            "1": [], // Terça
+            "2": [], // Quarta
+            "3": [], // Quinta
+            "4": [], // Sexta
+            "5": [], // Sábado
+            "6": []  // Domingo
         };
 
         // Exemplo de horários iniciais (opcional)
