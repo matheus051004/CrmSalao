@@ -6,7 +6,7 @@ from app.database import SessionLocal
 from app.models.pydantic.ajax.AgendamentoComplete import AgendamentoComplete
 from app.GoogleCalendarManager import GoogleCalendarManager
 from app.Evolution import Evolution
-from app.jinja import app_settings
+from app.jinja import app_settings, get_servicos_string
 
 router = APIRouter(
     prefix="/ajax-agendamentos",
@@ -77,7 +77,8 @@ async def cancelar_agendamento(agendamento_confirm: AgendamentoComplete):
             if cliente:
                 msg_prepared = (agendamento_confirm.message
                                 .replace('{cliente_name}', cliente.name)
-                                .replace('{salao_name}', app_settings('salao_name')))
+                                .replace('{salao_name}', app_settings('salao_name'))
+                                .replace('{servico_name}', get_servicos_string(agendamento.servicos)))
 
                 ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
                                os.environ.get('EVOLUTION_INSTANCE'))
