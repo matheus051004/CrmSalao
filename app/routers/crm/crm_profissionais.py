@@ -66,7 +66,7 @@ async def profissional_add_post(add: ProfissionalAdd):
     db = SessionLocal()
     try:
         profissional = Profissional(
-            name=add.name,
+            name=add.nome,
             calendar_id=add.calendar_id,
             services=add.servicos,
             horarios=add.horarios
