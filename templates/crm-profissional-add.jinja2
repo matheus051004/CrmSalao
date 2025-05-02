@@ -241,13 +241,11 @@
             event.preventDefault();
             const formData = new FormData(form);
 
-            // Tratamento especial para select multiple
             const servicosSelect = document.getElementById('servicos');
             const selectedServicos = Array.from(servicosSelect.selectedOptions).map(option => option.value);
 
-            // Criar objeto com os dados do formulário
             const data = Object.fromEntries(formData.entries());
-            // Substituir o valor único de serviços pelo array de valores selecionados
+            data.horarios = JSON.parse(data.horarios);
             data.servicos = selectedServicos;
 
             try {
