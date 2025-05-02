@@ -46,14 +46,18 @@
                             <textarea class="form-control" id="calendar_id" name="calendar_id"
                                       placeholder="Insira o ID da agenda do profissional"></textarea>
                         </div>
+
+                        <!-- Select serviços -->
                         <div class="mb-3">
                             <label for="servicos" class="form-label">Público</label>
-                            <select class="form-select" id="servicos" name="servicos[]" required multiple>
+                            <select class="form-select" id="servicos" name="servicos" required multiple>
                                 {% for servico in servicos %}
                                     <option value="{{ servico.id }}">{{ servico.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
+
+
                         <div class="mb-4">
                             <label class="form-label fw-bold">Horários de atendimento</label>
                             <input type="hidden" id="horarios_json" name="horarios"
