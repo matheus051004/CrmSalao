@@ -166,9 +166,10 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
-    function deleteProfissional() {
+    function deleteProfissional(idd) {
         if (confirm("Você tem certeza que deseja excluir este profissional?\n\n- Todos os agendamentos relacionados a este profissional também serão excluídos.")) {
-            fetch('', {
+            const url = "{{ url_for('delete-profissional', idd='') }}".replace('http', 'https') + idd;
+            fetch(url, {
                 method: 'DELETE'
             })
                 .then(response => {
