@@ -39,7 +39,8 @@
                     <form id="form">
                         <div class="mb-3">
                             <label for="servico" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required value="{{ profissional.name }}">
+                            <input type="text" class="form-control" id="nome" name="nome" required
+                                   value="{{ profissional.name }}">
                         </div>
                         <div class="mb-3">
                             <label for="descricao" class="form-label">Google calendar ID</label>
@@ -402,12 +403,12 @@
         const servicosSelect = document.getElementById('servicos');
         const selectedServicos = {{ profissional.services|safe }};
 
-        // Marcar os serviços selecionados
-        Array.from(servicosSelect.options).forEach(option => {
-            if (selectedServicos.includes(option.value)) {
+        for (let i = 0; i < selectedServicos.length; i++) {
+            const option = servicosSelect.querySelector(`option[value="${selectedServicos[i]}"]`);
+            if (option) {
                 option.selected = true;
             }
-        });
+        }
     })
 </script>
 </body>
