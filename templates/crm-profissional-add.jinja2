@@ -237,6 +237,9 @@
             event.preventDefault();
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
+            console.log(data)
+            /*
+            const data = Object.fromEntries(formData.entries());
 
             try {
                 const response = await fetch('', {
@@ -261,6 +264,8 @@
                 console.error('Error:', error);
                 alert('Erro ao adicionar serviço. Tente novamente.');
             }
+
+             */
         });
     })
 
