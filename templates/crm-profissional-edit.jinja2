@@ -396,6 +396,19 @@
             updateHorariosInput();
         });
     });
+
+    // Selecionar serviços
+    document.addEventListener('DOMContentLoaded', () => {
+        const servicosSelect = document.getElementById('servicos');
+        const selectedServicos = {{ profissional.services|safe }};
+
+        // Marcar os serviços selecionados
+        Array.from(servicosSelect.options).forEach(option => {
+            if (selectedServicos.includes(option.value)) {
+                option.selected = true;
+            }
+        });
+    })
 </script>
 </body>
 </html>
