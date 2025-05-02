@@ -48,7 +48,7 @@ async def profissionais(request: Request, page: int = 1, order_by: str = 'id', o
 @router.get('/add-profissional', name='add-profissional', response_class=HTMLResponse)
 async def profissional_add(request: Request):
 
-    return g.templates.TemplateResponse('crm-profissionais-add.jinja2', {
+    return g.templates.TemplateResponse('crm-profissional-add.jinja2', {
         'request': request,
         'sidebar': 'profissionais',
     })
