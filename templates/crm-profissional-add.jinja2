@@ -47,8 +47,8 @@
                                       placeholder="Insira o ID da agenda do profissional"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="sexo" class="form-label">Público</label>
-                            <select class="form-select" id="servicos" name="servicos" required multiple>
+                            <label for="servicos" class="form-label">Público</label>
+                            <select class="form-select" id="servicos" name="servicos[]" required multiple>
                                 {% for servico in servicos %}
                                     <option value="{{ servico.id }}">{{ servico.name }}</option>
                                 {% endfor %}
