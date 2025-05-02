@@ -6,8 +6,10 @@ from fastapi.templating import Jinja2Templates
 
 
 def prepare_jinja(templates: Jinja2Templates):
+    salao_name = app_settings('salao_name', '')
+
     templates.env.globals['v'] = os.environ.get('VERSION')
-    templates.env.globals['crm_name'] = os.environ.get('CRM_NAME')
+    templates.env.globals['crm_name'] = salao_name
 
     templates.env.globals['get_servico'] = get_servico
     templates.env.globals['get_cliente'] = get_cliente
@@ -91,7 +93,7 @@ def get_profissional(profissional_id: int):
         db.close()
 
 
-def reformat_date_time(date: datetime, new_format = '%d/%m/%Y %H:%M') -> str:
+def reformat_date_time(date: datetime, new_format='%d/%m/%Y %H:%M') -> str:
     """
     Reformat a date string from 'YYYY-MM-DD HH:MM' to 'DD/MM/YYYY HH:MM'.
     """
@@ -100,7 +102,7 @@ def reformat_date_time(date: datetime, new_format = '%d/%m/%Y %H:%M') -> str:
     return ''
 
 
-def app_settings(key: str, default=None):
+def app_settings(key: str, default=None) -> str | None:
     from app.database import SessionLocal
     db = SessionLocal()
     from app.models.app_setting import AppSetting
