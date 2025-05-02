@@ -5,7 +5,7 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 
 import app.glob as g
-from app import Profissional, Servico
+from app import Profissional, Servico, Agendamento
 from app.database import SessionLocal
 from app.models.pydantic.crm.ProfissionalAdd import ProfissionalAdd
 
@@ -107,6 +107,23 @@ async def profissional_edit_post(add: ProfissionalAdd, idd: int):
         db.add(profissional)
         db.commit()
         return response(True, 'Editado com sucesso', None)
+    finally:
+        db.close()
+
+@router.delete('/delete-profissional/{idd}', name='delete-profissional')
+async def profissional_delete(idd: int):
+    db = SessionLocal()
+    try:
+        profissional = db.query(Profissional).filter(Profissional.id == idd).first()
+        if not profissional:
+            return response(False, 'Profissional não encontrado', None)
+        db.delete(profissional)
+
+        # deletar agendamentos relacionados
+        db.query(Agendamento).filter(Agendamento.profissional_id == idd).delete()
+
+        db.commit()
+        return response(True, 'Profissional deletado com sucesso', None)
     finally:
         db.close()
 

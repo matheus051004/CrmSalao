@@ -78,7 +78,7 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                               onclick="deleteProfissional({{ item.id }})"
+                                               onclick="deleteProfissional()"
                                                class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -166,17 +166,10 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
-    function deleteProfissional(id) {
-        if (confirm("Você tem certeza que deseja excluir este serviço?\n\n- Todos os agendamentos relacionados a este serviço também serão excluídos.")) {
-            const url = `{{ url_for('ajax-delete-servico') }}`.replace('http', 'https');
-            const body = JSON.stringify({servico_id: id});
-
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: body
+    function deleteProfissional() {
+        if (confirm("Você tem certeza que deseja excluir este profissional?\n\n- Todos os agendamentos relacionados a este profissional também serão excluídos.")) {
+            fetch('', {
+                method: 'DELETE'
             })
                 .then(response => {
                     (async () => {
