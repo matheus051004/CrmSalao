@@ -48,11 +48,10 @@
                         </div>
                         <div class="mb-3">
                             <label for="sexo" class="form-label">Público</label>
-                            <select class="form-select" id="sexo" name="sexo" required>
-                                <option value="unissex" selected disabled>Selecione o público alvo</option>
-                                <option value="feminino">Feminino</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="unissex">Unissex</option>
+                            <select class="form-select" id="servicos" name="servicos" required multiple>
+                                {% for servico in servicos %}
+                                    <option value="{{ servico.id }}">{{ servico.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="mb-4">

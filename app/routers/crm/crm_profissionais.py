@@ -5,7 +5,7 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 
 import app.glob as g
-from app import Profissional
+from app import Profissional, Servico
 from app.database import SessionLocal
 
 router = APIRouter(
@@ -48,9 +48,16 @@ async def profissionais(request: Request, page: int = 1, order_by: str = 'id', o
 @router.get('/add-profissional', name='add-profissional', response_class=HTMLResponse)
 async def profissional_add(request: Request):
 
+    db = SessionLocal()
+    try:
+        servicos = db.query(Servico).all()
+    finally:
+        db.close()
+
     return g.templates.TemplateResponse('crm-profissional-add.jinja2', {
         'request': request,
         'sidebar': 'profissionais',
+        'servicos': servicos
     })
 
 
