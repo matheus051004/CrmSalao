@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-lg-9 d-none d-lg-block"></div>
                         <div class="col-lg-3">
-                            <button onclick="window.location.href = '{{ url_for("add-servico") }}'"
+                            <button onclick="window.location.href = '{{ url_for("add-profissional") }}'"
                                     class="btn btn-primary w-100">
                                 <i class="fa-solid fa-plus"></i>
                                 Novo Profissional
@@ -78,7 +78,7 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                               onclick="deleteServico({{ item.id }})"
+                                               onclick="deleteProfissional({{ item.id }})"
                                                class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -166,7 +166,7 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
-    function deleteServico(id) {
+    function deleteProfissional(id) {
         if (confirm("Você tem certeza que deseja excluir este serviço?\n\n- Todos os agendamentos relacionados a este serviço também serão excluídos.")) {
             const url = `{{ url_for('ajax-delete-servico') }}`.replace('http', 'https');
             const body = JSON.stringify({servico_id: id});

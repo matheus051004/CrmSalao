@@ -45,6 +45,15 @@ async def profissionais(request: Request, page: int = 1, order_by: str = 'id', o
     })
 
 
+@router.get('/add-profissional', name='add-profissional', response_class=HTMLResponse)
+async def profissional_add(request: Request):
+
+    return g.templates.TemplateResponse('crm-profissionais-add.jinja2', {
+        'request': request,
+        'sidebar': 'profissionais',
+    })
+
+
 # db functions
 def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
     db = SessionLocal()
