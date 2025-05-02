@@ -78,7 +78,7 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                               onclick="deleteProfissional()"
+                                               onclick="deleteProfissional('{{ url_for('delete-profissional', idd=item.id) }}')"
                                                class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -166,9 +166,9 @@
 {% include 'parts/foot.jinja2' %}
 
 <script>
-    function deleteProfissional(idd) {
+    function deleteProfissional(url_delete) {
         if (confirm("Você tem certeza que deseja excluir este profissional?\n\n- Todos os agendamentos relacionados a este profissional também serão excluídos.")) {
-            const url = "{{ url_for('delete-profissional', idd='') }}".replace('http', 'https') + idd;
+            const url = url_delete.replace('http', 'https');
             fetch(url, {
                 method: 'DELETE'
             })
