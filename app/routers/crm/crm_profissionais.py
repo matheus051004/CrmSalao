@@ -95,6 +95,21 @@ async def profissional_edit(request: Request, idd: int):
         'profissional': profissional
     })
 
+@router.post('/edit-profissional/{idd}', name='edit-profissional-post')
+async def profissional_edit_post(add: ProfissionalAdd, idd: int):
+    db = SessionLocal()
+    try:
+        profissional = db.query(Profissional).filter(Profissional.id == idd).first()
+        profissional.name = add.nome
+        profissional.calendar_id = add.calendar_id
+        profissional.services = add.servicos
+        profissional.horarios = add.horarios
+        db.add(profissional)
+        db.commit()
+        return response(True, 'Editado com sucesso', None)
+    finally:
+        db.close()
+
 
 # db functions
 def get_items(order_by: str = 'id', order: str = 'asc', page: int = 1, per_page: int = 10) -> tuple | None:
