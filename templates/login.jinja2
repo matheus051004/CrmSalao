@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <title>Login - {{ crm_name }}</title>
+    <title>Login - {{ crm_name() }}</title>
     {% include 'parts/head.jinja2' %}
     <style>
         body {
@@ -30,7 +30,7 @@
         <div class="login-container">
             <div class="login-logo">
                 <i class="fas fa-cut me-2"></i>
-                <h3 class="mt-2">{{ crm_name }}</h3>
+                <h3 class="mt-2">{{ crm_name() }}</h3>
                 <p class="text-muted">Faça login para acessar o dashboard</p>
             </div>
 
@@ -57,7 +57,7 @@
             </form>
 
             <div class="mt-4 text-center">
-                <p class="mb-0">© 2025 {{ crm_name }} by TH Automações</p>
+                <p class="mb-0">© 2025 {{ crm_name() }} by TH Automações</p>
             </div>
         </div>
     </div>
