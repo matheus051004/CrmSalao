@@ -20,7 +20,7 @@ async def configuracoes(request: Request):
         'sidebar': 'configuracoes',
     })
 
-@router.post('/', name='configuracoes_post')
+@router.post('/', name='configuracoes_postt')
 async def configuracoes_post(config: Configs):
     s1 = AppSetting(key='salao_name', value=config.crm_name)
     s2 = AppSetting(key='msg_preference', value=config.msg_preference)
