@@ -20,6 +20,7 @@ async def configuracoes(request: Request):
         'sidebar': 'configuracoes',
     })
 
+
 @router.post('/', name='configuracoes_post')
 async def configuracoes_post(config: Configs):
     update_setting('salao_name', config.crm_name)
@@ -29,6 +30,7 @@ async def configuracoes_post(config: Configs):
     update_setting('msg_follow_up', config.msg_follow_up)
 
     return response(True, "Configurações salvas com sucesso")
+
 
 def update_setting(key, value):
     db = SessionLocal()
@@ -42,6 +44,7 @@ def update_setting(key, value):
             return False
     finally:
         db.close()
+
 
 def response(success=True, message="", data=None):
     return {

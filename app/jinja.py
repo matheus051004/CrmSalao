@@ -6,10 +6,8 @@ from fastapi.templating import Jinja2Templates
 
 
 def prepare_jinja(templates: Jinja2Templates):
-    salao_name = app_settings('salao_name', '')
-
     templates.env.globals['v'] = os.environ.get('VERSION')
-    templates.env.globals['crm_name'] = salao_name
+    templates.env.globals['crm_name'] = lambda: app_settings('salao_name', '')
 
     templates.env.globals['get_servico'] = get_servico
     templates.env.globals['get_cliente'] = get_cliente
