@@ -42,14 +42,14 @@
                         <label class="form-label">Nome do salão</label>
                         <input type="text" class="form-control" id="crm_name" value="{{ crm_name() }}">
                     </div>
-                    <div>
+                    <div class="mb-4">
                         <label class="form-label">Follow-up minutos</label>
                         <small class="form-text text-muted d-block">Quantos minutos antes do agendamento o follow-up
                             será enviado</small>
                         <input type="number" class="form-control" id="follow_up_minutes"
                                value="{{ app_settings('follow_up_minutes') }}">
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label class="form-label">Nome da assistente</label>
                         <input type="text" class="form-control" id="assistant_name" value="{{ app_settings('assistant_name') }}">
                     </div>
