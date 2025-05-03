@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app import Profissional
+from app import Profissional, Servico
 from app.database import SessionLocal
 from app.jinja import app_settings, get_servicos_string
 
@@ -67,6 +67,34 @@ async def profissional_horarios(profissional_id: int):
         }
 
         return response(success=True, message="ok", data=horarios)
+    finally:
+        db.close()
+
+
+@config_router.get('/servicos')
+async def servicos():
+    """
+    Retorna os serviços cadastrados no sistema.
+    """
+    db = SessionLocal()
+    try:
+        servicos = db.query(Servico).all()
+        if not servicos:
+            return response(success=False, message="Nenhum serviço encontrado", data=[])
+
+        # Formata a resposta
+        data = []
+        for servico in servicos:
+            data.append({
+                "id": servico.id,
+                "nome": servico.name,
+                "descricao": servico.description,
+                "preco": servico.price,
+                "duracao_minutos": servico.minutes,
+                "publico": servico.sexo
+            })
+
+        return response(success=True, message="ok", data=data)
     finally:
         db.close()
 
