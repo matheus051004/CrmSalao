@@ -29,7 +29,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Configurações</h2>
-        <button class="btn btn-primary">Salvar alterações</button>
+        <button class="btn btn-primary submit-configs">Salvar alterações</button>
     </div>
 
 
@@ -44,8 +44,10 @@
                     </div>
                     <div>
                         <label class="form-label">Follow-up minutos</label>
-                        <small class="form-text text-muted d-block">Quantos minutos antes do agendamento o follow-up será enviado</small>
-                        <input type="number" class="form-control" id="follow_up_minutes" value="{{ app_settings('follow_up_minutes') }}">
+                        <small class="form-text text-muted d-block">Quantos minutos antes do agendamento o follow-up
+                            será enviado</small>
+                        <input type="number" class="form-control" id="follow_up_minutes"
+                               value="{{ app_settings('follow_up_minutes') }}">
                     </div>
                 </div>
             </div>
@@ -56,28 +58,78 @@
                     <h5 class="card-title mb-4">Mensagens</h5>
                     <div class="mb-4">
                         <label class="form-label">Mensagem de conclusão</label>
-                        <small class="form-text text-muted d-block">Esta mensagem será enviada quando um agendamento for concluído</small>
-                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name} {servico_name}.</code></small>
-                        <textarea id="msg_preference" class="form-control" rows="8">{{ app_settings('msg_preference') }}</textarea>
+                        <small class="form-text text-muted d-block">Esta mensagem será enviada quando um agendamento for
+                            concluído</small>
+                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name}
+                            {servico_name}.</code></small>
+                        <textarea id="msg_preference" class="form-control"
+                                  rows="8">{{ app_settings('msg_preference') }}</textarea>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Mensagem de cancelamento</label>
-                        <small class="form-text text-muted d-block">Esta mensagem será enviada quando um agendamento for cancelado</small>
-                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name} {servico_name}.</code></small>
-                        <textarea id="msg_cancel" class="form-control" rows="8">{{ app_settings('msg_cancel') }}</textarea>
+                        <small class="form-text text-muted d-block">Esta mensagem será enviada quando um agendamento for
+                            cancelado</small>
+                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name}
+                            {servico_name}.</code></small>
+                        <textarea id="msg_cancel" class="form-control"
+                                  rows="8">{{ app_settings('msg_cancel') }}</textarea>
                     </div>
                     <div>
                         <label class="form-label">Mensagem Follow-UP</label>
-                        <small class="form-text text-muted d-block">Esta mensagem será enviada para o cliente confirmando o agendamento X minutos antes</small>
-                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name} {servico_name} {servico_date}.</code></small>
-                        <textarea id="msg_cancel" class="form-control" rows="8">{{ app_settings('msg_follow_up') }}</textarea>
+                        <small class="form-text text-muted d-block">Esta mensagem será enviada para o cliente
+                            confirmando o agendamento X minutos antes</small>
+                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name}
+                            {servico_name} {servico_date}.</code></small>
+                        <textarea id="msg_follow_up" class="form-control"
+                                  rows="8">{{ app_settings('msg_follow_up') }}</textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div> <!-- row end -->
 </div> <!-- main-content end -->
-
 {% include 'parts/foot.jinja2' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const crmNameInput = document.getElementById('crm_name');
+        const followUpMinutesInput = document.getElementById('follow_up_minutes');
+        const msgPreferenceInput = document.getElementById('msg_preference');
+        const msgCancelInput = document.getElementById('msg_cancel');
+        const msgFollowUpInput = document.getElementById('msg_follow_up');
+
+        document.querySelector('.submit-configs').addEventListener('click', async () => {
+            const notyf = new Notyf();
+            try {
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        crm_name: crmNameInput.value,
+                        follow_up_minutes: parseInt(followUpMinutesInput.value),
+                        msg_preference: msgPreferenceInput.value,
+                        msg_cancel: msgCancelInput.value,
+                        msg_follow_up: msgFollowUpInput.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    notyf.success(data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    notyf.error(data.message);
+                }
+            } catch (error) {
+                notyf.error('Ocorreu um erro ao salvar as configurações.');
+            }
+        });
+    })
+</script>
 </body>
 </html>

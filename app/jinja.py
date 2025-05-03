@@ -104,9 +104,9 @@ def reformat_date_time(date: datetime, new_format='%d/%m/%Y %H:%M') -> str:
 
 def app_settings(key: str, default=None) -> str | None:
     from app.database import SessionLocal
-    db = SessionLocal()
     from app.models.app_setting import AppSetting
 
+    db = SessionLocal()
     try:
         setting = db.query(AppSetting).filter(AppSetting.key == key).first()
         if setting:
