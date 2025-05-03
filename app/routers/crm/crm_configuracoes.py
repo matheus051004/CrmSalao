@@ -22,23 +22,26 @@ async def configuracoes(request: Request):
 
 @router.post('/', name='configuracoes_post')
 async def configuracoes_post(config: Configs):
-    s1 = AppSetting(key='salao_name', value=config.crm_name)
-    s2 = AppSetting(key='msg_preference', value=config.msg_preference)
-    s3 = AppSetting(key='msg_cancel', value=config.msg_cancel)
-    s4 = AppSetting(key='follow_up_minutes', value=str(config.follow_up_minutes))
-    s5 = AppSetting(key='msg_follow_up', value=config.msg_follow_up)
-    db = SessionLocal()
-    try:
-        db.add(s1)
-        db.add(s2)
-        db.add(s3)
-        db.add(s4)
-        db.add(s5)
-        db.commit()
-    finally:
-        db.close()
+    update_setting('salao_name', config.crm_name)
+    update_setting('msg_preference', config.msg_preference)
+    update_setting('msg_cancel', config.msg_cancel)
+    update_setting('follow_up_minutes', str(config.follow_up_minutes))
+    update_setting('msg_follow_up', config.msg_follow_up)
 
     return response(True, "Configurações salvas com sucesso")
+
+def update_setting(key, value):
+    db = SessionLocal()
+    try:
+        setting = db.query(AppSetting).filter(AppSetting.key == key).first()
+        if setting:
+            setting.value = value
+            db.commit()
+            return True
+        else:
+            return False
+    finally:
+        db.close()
 
 def response(success=True, message="", data=None):
     return {
