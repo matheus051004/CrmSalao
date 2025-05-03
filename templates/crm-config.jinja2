@@ -43,6 +43,10 @@
                         <input type="text" class="form-control" id="crm_name" value="{{ crm_name() }}">
                     </div>
                     <div class="mb-4">
+                        <label class="form-label">Slogan do salão</label>
+                        <input type="text" class="form-control" id="crm_slogan" value="{{ app_settings('salao_slogan') }}">
+                    </div>
+                    <div class="mb-4">
                         <label class="form-label">Follow-up minutos</label>
                         <small class="form-text text-muted d-block">Quantos minutos antes do agendamento o follow-up
                             será enviado</small>
@@ -102,6 +106,7 @@
         const msgCancelInput = document.getElementById('msg_cancel');
         const msgFollowUpInput = document.getElementById('msg_follow_up');
         const assistantNameInput = document.getElementById('assistant_name');
+        const crmSloganInput = document.getElementById('crm_slogan');
 
         document.querySelector('.submit-configs').addEventListener('click', async () => {
             const notyf = new Notyf();
@@ -117,7 +122,8 @@
                         msg_preference: msgPreferenceInput.value,
                         msg_cancel: msgCancelInput.value,
                         msg_follow_up: msgFollowUpInput.value,
-                        assistant_name: assistantNameInput.value
+                        assistant_name: assistantNameInput.value,
+                        crm_slogan: crmSloganInput.value
                     })
                 });
 
