@@ -49,6 +49,10 @@
                         <input type="number" class="form-control" id="follow_up_minutes"
                                value="{{ app_settings('follow_up_minutes') }}">
                     </div>
+                    <div class="mb-4">
+                        <label class="form-label">Nome da assistente</label>
+                        <input type="text" class="form-control" id="assistant_name" value="{{ app_settings('assistant_name') }}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,6 +101,7 @@
         const msgPreferenceInput = document.getElementById('msg_preference');
         const msgCancelInput = document.getElementById('msg_cancel');
         const msgFollowUpInput = document.getElementById('msg_follow_up');
+        const assistantNameInput = document.getElementById('assistant_name');
 
         document.querySelector('.submit-configs').addEventListener('click', async () => {
             const notyf = new Notyf();
@@ -111,7 +116,8 @@
                         follow_up_minutes: parseInt(followUpMinutesInput.value),
                         msg_preference: msgPreferenceInput.value,
                         msg_cancel: msgCancelInput.value,
-                        msg_follow_up: msgFollowUpInput.value
+                        msg_follow_up: msgFollowUpInput.value,
+                        assistant_name: assistantNameInput.value
                     })
                 });
 

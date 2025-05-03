@@ -7,3 +7,4 @@ class Configs(BaseModel):
     msg_preference: str
     msg_cancel: str
     msg_follow_up: str
+    assistant_name: str

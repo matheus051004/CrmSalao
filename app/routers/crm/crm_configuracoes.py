@@ -28,6 +28,7 @@ async def configuracoes_post(config: Configs):
     update_setting('msg_cancel', config.msg_cancel)
     update_setting('follow_up_minutes', str(config.follow_up_minutes))
     update_setting('msg_follow_up', config.msg_follow_up)
+    update_setting('assistant_name', config.assistant_name)
 
     return response(True, "Configurações salvas com sucesso")
 
