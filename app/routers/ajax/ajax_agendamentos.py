@@ -90,13 +90,6 @@ async def cancelar_agendamento(agendamento_confirm: AgendamentoComplete):
         db.close()
 
 
-def replace_placeholders(text, salao_name = '', cliente_name = '', profissional_name = ''):
-    text = text.replace('{salao_name}', salao_name)
-    text = text.replace('{cliente_name}', cliente_name)
-    text = text.replace('{profissional_name}', profissional_name)
-    return text
-
-
 
 def response(success=True, message="", data=None):
     return {

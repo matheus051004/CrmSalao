@@ -62,6 +62,8 @@
                     </div>
                     <div>
                         <label class="form-label">Mensagem Follow-UP</label>
+                        <small class="form-text text-muted d-block">Esta mensagem será enviada para o cliente confirmando o agendamento X minutos antes</small>
+                        <small class="form-text text-muted mb-2 d-block"><code>Variáveis: {cliente_name} {salao_name} {servico_name} {servico_date}.</code></small>
                         <textarea id="msg_cancel" class="form-control" rows="8">{{ app_settings('msg_follow_up') }}</textarea>
                     </div>
                 </div>
