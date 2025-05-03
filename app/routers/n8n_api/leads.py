@@ -35,7 +35,7 @@ async def create(lead_create: LeadCreate):
 async def get_cliente(idd: int):
     db = SessionLocal()
     try:
-        cliente = db.query(Cliente).filter(or_(Cliente.id == idd, Cliente.phone == idd)).first()
+        cliente = db.query(Cliente).filter(or_(Cliente.id == idd, Cliente.phone == str(idd))).first()
         if not cliente:
             return response(False, "Cliente não encontrado")
         return response(True, "ok", cliente)
