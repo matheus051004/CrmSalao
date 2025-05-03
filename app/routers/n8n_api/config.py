@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from app.jinja import app_settings
 
 config_router = APIRouter(
@@ -12,6 +11,8 @@ config_router = APIRouter(
 async def configs():
     configs = {
         'salao_name': app_settings('salao_name'),
+        'salao_slogan': app_settings('salao_slogan'),
+        'assistant_name': app_settings('assistant_name'),
     }
     return response(success=True, message="ok", data=configs)
 
