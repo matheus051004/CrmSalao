@@ -14,14 +14,14 @@ router = APIRouter(
 
 
 @router.get('/', name='configuracoes', response_class=HTMLResponse)
-async def dashboard(request: Request):
+async def configuracoes(request: Request):
     return g.templates.TemplateResponse('crm-config.jinja2', {
         'request': request,
         'sidebar': 'configuracoes',
     })
 
 @router.post('/', name='configuracoes_post')
-async def dashboard_post(config: Configs):
+async def configuracoes_post(config: Configs):
     s1 = AppSetting(key='salao_name', value=config.crm_name)
     s2 = AppSetting(key='msg_preference', value=config.msg_preference)
     s3 = AppSetting(key='msg_cancel', value=config.msg_cancel)
