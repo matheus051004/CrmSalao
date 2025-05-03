@@ -44,6 +44,33 @@ async def profissionais():
         db.close()
 
 
+@config_router.get('/profissional-horarios/{profissional_id}')
+async def profissional_horarios(profissional_id: int):
+    """
+    Retorna os horários de atendimento de um profissional.
+    """
+    db = SessionLocal()
+    try:
+        profissional = db.query(Profissional).filter(Profissional.id == profissional_id).first()
+        if not profissional:
+            return response(success=False, message="Nenhum profissional encontrado", data=[])
+
+        # Formata a resposta
+        horarios = {
+            "segunda": profissional.horarios["0"],
+            "terca": profissional.horarios["1"],
+            "quarta": profissional.horarios["2"],
+            "quinta": profissional.horarios["3"],
+            "sexta": profissional.horarios["4"],
+            "sabado": profissional.horarios["5"],
+            "domingo": profissional.horarios["6"],
+        }
+
+        return response(success=True, message="ok", data=horarios)
+    finally:
+        db.close()
+
+
 def response(success=True, message="", data=None):
     """
     Formata a resposta da API.
