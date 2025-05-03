@@ -19,6 +19,7 @@ async def configs():
     }
     return response(success=True, message="ok", data=configs)
 
+
 @config_router.get("/profissionais")
 async def profissionais():
     """

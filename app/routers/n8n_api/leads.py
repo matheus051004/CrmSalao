@@ -30,6 +30,18 @@ async def create(lead_create: LeadCreate):
         db.close()
 
 
+@leads_router.get('/cliente/{idd}')
+async def get_cliente(idd: int):
+    db = SessionLocal()
+    try:
+        cliente = db.query(Cliente).filter(Cliente.id == idd).first()
+        if not cliente:
+            return response(False, "Cliente não encontrado")
+        return response(True, "ok", cliente)
+    finally:
+        db.close()
+
+
 def response(success=True, message="", data=None):
     """
     Formata a resposta da API.
