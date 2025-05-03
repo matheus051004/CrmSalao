@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 def prepare_jinja(templates: Jinja2Templates):
     templates.env.globals['v'] = os.environ.get('VERSION')
-    templates.env.globals['crm_name'] = lambda: str(app_settings('salao_name', ''))
+    templates.env.globals['crm_name'] = crm_name
 
     templates.env.globals['get_servico'] = get_servico
     templates.env.globals['get_cliente'] = get_cliente
@@ -17,6 +17,9 @@ def prepare_jinja(templates: Jinja2Templates):
     templates.env.globals['app_settings'] = app_settings
 
     templates.env.filters['tojson'] = json.dumps
+
+def crm_name() -> str:
+    return app_settings('salao_name', '')
 
 
 def get_servico(service_id: int):
