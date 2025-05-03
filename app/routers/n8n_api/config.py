@@ -67,7 +67,13 @@ async def profissional_horarios(profissional_id: int):
             "domingo": profissional.horarios["6"],
         }
 
-        return response(success=True, message="ok", data=horarios)
+        data = {
+            "id": profissional.id,
+            "nome": profissional.name,
+            "horarios-atendimento": horarios,
+        }
+
+        return response(success=True, message="ok", data=data)
     finally:
         db.close()
 
