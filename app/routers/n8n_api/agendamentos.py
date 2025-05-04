@@ -3,9 +3,9 @@ from datetime import datetime, time, timedelta
 from typing import Tuple, Any, Optional, List, Dict
 
 from fastapi.routing import APIRouter
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
-from app import Servico, Profissional
+from app import Servico, Profissional, Cliente
 from app.database import SessionLocal
 from app.models.agendamentos import Agendamento
 from app.models.pydantic.api.AgendamentoCancel import AgendamentoCancel
@@ -60,7 +60,7 @@ async def horarios_diponiveis(date: str, profissional_id: int, servicos_ids: str
 
 @agendamentos_router.post("/criar", name="n8n-criar-agendamento")
 async def criar_agendamento(dados: AgendamentoCreate):
-    cliente_id = dados.cliente_id
+    cliente_id = dados.cliente_id #ID ou telefone
     profissional_id = dados.profissional_id
     servicos_ids = dados.servicos_ids
     date = dados.date
@@ -78,6 +78,9 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
     db = SessionLocal()
     try:
+
+        cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
+
         # 1. Verificar se o profissional atende todos os serviços e trabalha naquele dia
         sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
             db, profissional_id, servicos_ids, dia_semana
@@ -125,7 +128,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
 
         # Criar o agendamento
         novo_agendamento = Agendamento(
-            cliente_id=cliente_id,
+            cliente_id=cliente.id,
             profissional_id=profissional_id,
             servicos=servicos_ids,
             start=inicio_agendamento,
@@ -174,17 +177,20 @@ async def criar_agendamento(dados: AgendamentoCreate):
 @agendamentos_router.post('/cancelar', name='n8n-cancelar-agendamento')
 async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
     agendamento_id = agendamento_cancel.agendamento_id
-    cliente_id = agendamento_cancel.cliente_id
+    cliente_id = agendamento_cancel.cliente_id #ID ou telefone
 
     db = SessionLocal()
     try:
+
+        cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
+
         # Verifica se o agendamento existe
         agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id).first()
         if not agendamento:
             return response(False, "Agendamento não encontrado")
 
         # Verifica se o cliente é o dono do agendamento
-        if agendamento.cliente_id != cliente_id:
+        if agendamento.cliente_id != cliente.id:
             return response(False, "Você não tem permissão para cancelar este agendamento")
 
         # Cancela o agendamento
@@ -205,19 +211,21 @@ async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
 @agendamentos_router.post('/reagendar', name='n8n-reagendar-agendamento')
 async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
     agendamento_id = agendamento_reschedule.agendamento_id
-    cliente_id = agendamento_reschedule.cliente_id
+    cliente_id = agendamento_reschedule.cliente_id #ID ou telefone
 
     date = datetime.strptime(agendamento_reschedule.new_date_time, '%Y-%m-%d %H:%M')
     dia_semana = str(date.weekday())
 
     db = SessionLocal()
     try:
+        cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
+
         agendamento = db.query(Agendamento).filter(Agendamento.id == agendamento_id,
                                                    Agendamento.status == 'agendado').first()
         if not agendamento:
             return response(False, "Agendamento não encontrado")
 
-        if agendamento.cliente_id != cliente_id:
+        if agendamento.cliente_id != cliente.id:
             return response(False, "Você não tem permissão para reagendar este evento")
 
         # 1. Verificar se o profissional atende todos os serviços e trabalha naquele dia
@@ -282,8 +290,10 @@ async def get_agendamentos(cliente_id: int, status='agendado', date: str = '0000
     db = SessionLocal()
     date = datetime.strptime(date, '%Y-%m-%d') if date != '0000-00-00' else datetime.now()
     try:
+        cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
+
         agendamentos = db.query(Agendamento).filter(
-            Agendamento.cliente_id == cliente_id,
+            Agendamento.cliente_id == cliente.id,
             Agendamento.status == status,
             func.date(Agendamento.start) == date
         ).all()
