@@ -65,9 +65,6 @@ async def criar_agendamento(dados: AgendamentoCreate):
     servicos_ids = dados.servicos_ids
     date = dados.date
     start_hour = dados.start_hour
-    metadata = dados.metadata
-
-    description = "\n".join([f"{key}: {value}" for key, value in metadata.items()]) if metadata else ""
 
     # Validar a data
     sucesso, resultado = validar_data(date)
@@ -80,6 +77,12 @@ async def criar_agendamento(dados: AgendamentoCreate):
     try:
 
         cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
+
+        metadata = {
+            "nome": cliente.name,
+            "telefone": cliente.phone,
+        }
+        description = "\n".join([f"{key}: {value}" for key, value in metadata.items()]) if metadata else ""
 
         # 1. Verificar se o profissional atende todos os serviços e trabalha naquele dia
         sucesso, resultado, profissional, servicos, duracao_total = verificar_disponibilidade_profissional(
