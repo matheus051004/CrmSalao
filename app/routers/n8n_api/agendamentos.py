@@ -79,7 +79,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
         cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
 
         if not cliente:
-            return response(False, "Cliente não encontrado")
+            return response(False, "ID do profissional inválido")
 
         metadata = {
             "nome": cliente.name,
