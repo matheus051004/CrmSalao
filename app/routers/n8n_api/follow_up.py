@@ -57,6 +57,7 @@ async def follow_up():
                     """),
                     {"agendamento_id": agendamento['id']}
                 )
+                db.commit()
 
                 ev.simple_text(cliente.phone, msg_prepared)
     finally:
