@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -36,6 +37,10 @@ logger = logging.getLogger(__name__)
 
 
 @app.on_event("startup")
+@app.on_event("startup")
 async def startup_event():
     create_all_tables()
     logger.info("Tabelas criadas com sucesso")
+
+    # Exemplo de uso da função periódica
+    # asyncio.create_task(run_periodic(60, sua_funcao_periodica))
