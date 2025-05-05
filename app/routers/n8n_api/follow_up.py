@@ -37,6 +37,9 @@ async def follow_up():
         result_proxy = query.mappings()  # Isso retorna dicionários em vez de tuplas
         agendamentos = result_proxy.all()
         if agendamentos:
+            ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
+                           os.environ.get('EVOLUTION_INSTANCE'))
+
             for agendamento in agendamentos:
                 cliente = db.query(Cliente).filter(Cliente.id == agendamento['cliente_id']).first()
                 msg = app_settings('msg_follow_up')
@@ -45,8 +48,16 @@ async def follow_up():
                                 .replace('{servico_date}', agendamento['start'].strftime('%d/%m/%Y %H:%M'))
                                 .replace('{servico_name}', get_servicos_string(agendamento['servicos'])))
 
-                ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
-                               os.environ.get('EVOLUTION_INSTANCE'))
+                # Atualiza o agendamento para notificado
+                db.execute(
+                    text("""
+                        UPDATE agendamentos 
+                        SET notified = true 
+                        WHERE id = :agendamento_id
+                    """),
+                    {"agendamento_id": agendamento['id']}
+                )
+
                 ev.simple_text(cliente.phone, msg_prepared)
     finally:
         db.close()
