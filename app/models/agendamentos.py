@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, func, JSON
+from sqlalchemy import Column, Integer, String, DateTime, func, Boolean
 from sqlalchemy.dialects.postgresql import JSONB
 
 from app.database import Base
@@ -18,4 +18,5 @@ class Agendamento(Base):
     google_event_id = Column(String, nullable=True)
     client_metadata = Column(JSONB, nullable=True, default={})
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    notified = Column(Boolean, nullable=False, default=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
