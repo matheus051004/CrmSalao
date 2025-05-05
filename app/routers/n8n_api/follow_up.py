@@ -34,8 +34,8 @@ async def follow_up():
             """),
             {"minutes": str(minutes_follow_up)}
         )
-        agendamentos = query.fetchall()
-
+        result_proxy = query.mappings()  # Isso retorna dicionários em vez de tuplas
+        agendamentos = result_proxy.all()
         if agendamentos:
             for agendamento in agendamentos:
                 cliente = db.query(Cliente).filter(Cliente.id == agendamento['cliente_id']).first()
