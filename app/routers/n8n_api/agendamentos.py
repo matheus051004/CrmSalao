@@ -298,6 +298,9 @@ async def get_agendamentos(cliente_id: int, status='agendado', date: str = '0000
     try:
         cliente = db.query(Cliente).filter(or_(Cliente.id == cliente_id, Cliente.phone == str(cliente_id))).first()
 
+        if not cliente:
+            return response(False, "Cliente não encontrado")
+
         agendamentos = db.query(Agendamento).filter(
             Agendamento.cliente_id == cliente.id,
             Agendamento.status == status,
