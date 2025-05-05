@@ -16,3 +16,10 @@ async def dashboard(request: Request):
         'request': request,
         'sidebar': 'dashboard',
     })
+
+@router.post('/', name='dashboard', response_class=HTMLResponse)
+async def dashboard_post(request: Request):
+    return g.templates.TemplateResponse('crm-dashboard.jinja2', {
+        'request': request,
+        'sidebar': 'dashboard',
+    })
