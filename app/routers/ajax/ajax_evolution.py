@@ -4,6 +4,8 @@ from fastapi import APIRouter
 from fastapi import Request
 import requests
 
+from app.Evolution import Evolution
+
 router = APIRouter(
     prefix="/ajax-evo",
     include_in_schema=False
@@ -16,20 +18,10 @@ async def simple_message(request: Request):
     number = form.get('number')
     message = form.get('message')
 
-    headers = {
-        'apikey': os.environ.get('EVOLUTION_API_KEY')
-    }
-    body = {
-        'number': number,
-        'text': message
-    }
-    result = requests.post(
-        url=f"{os.environ.get('EVOLUTION_API_URL')}/message/sendText/{os.environ.get('EVOLUTION_INSTANCE')}",
-        headers=headers,
-        json=body
-    )
-    json_result = result.json()
+    ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
+                   os.environ.get('WAHA_INSTANCE'))
+    ev.simple_text(number, message)
     return {
-        'status': 200 if json_result['status'] == 'PENDING' else 400,
-        'message': json_result['error'] if 'error' in json_result else 'Mensagem enviada com sucesso'
+        'status': 200,
+        'message': 'Mensagem enviada com sucesso'
     }

@@ -23,7 +23,7 @@ class Evolution:
             "linkPreviewHighQuality": False,
             "session": f"{self.instance}"
         }
-        result = requests.post(
+        requests.post(
             url=f"{self.base_url}/api/sendText",
             headers=headers,
             json=body
