@@ -43,8 +43,8 @@ async def concluir_agendamento(agendamento_confirm: AgendamentoComplete):
                                 .replace('{salao_name}', app_settings('salao_name'))
                                 .replace('{servico_name}', get_servicos_string(agendamento.servicos)))
 
-                ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
-                               os.environ.get('EVOLUTION_INSTANCE'))
+                ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
+                               os.environ.get('WAHA_INSTANCE'))
                 ev.simple_text(cliente.phone, msg_prepared)
 
         return response(True, 'Agendamento finalizado com sucesso')
@@ -81,8 +81,8 @@ async def cancelar_agendamento(agendamento_confirm: AgendamentoComplete):
                                 .replace('{salao_name}', app_settings('salao_name'))
                                 .replace('{servico_name}', get_servicos_string(agendamento.servicos)))
 
-                ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
-                               os.environ.get('EVOLUTION_INSTANCE'))
+                ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
+                               os.environ.get('WAHA_INSTANCE'))
                 ev.simple_text(cliente.phone, msg_prepared)
 
         return response(True, 'Agendamento finalizado com sucesso')

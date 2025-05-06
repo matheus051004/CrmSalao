@@ -37,8 +37,8 @@ async def follow_up():
         result_proxy = query.mappings()  # Isso retorna dicionários em vez de tuplas
         agendamentos = result_proxy.all()
         if agendamentos:
-            ev = Evolution(os.environ.get('EVOLUTION_API_URL'), os.environ.get('EVOLUTION_API_KEY'),
-                           os.environ.get('EVOLUTION_INSTANCE'))
+            ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
+                           os.environ.get('WAHA_INSTANCE'))
 
             for agendamento in agendamentos:
                 cliente = db.query(Cliente).filter(Cliente.id == agendamento['cliente_id']).first()

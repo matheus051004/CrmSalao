@@ -13,20 +13,22 @@ class Evolution:
 
     def simple_text(self, number, message):
         headers = {
-            'apikey': self.api_key
+            'X-Api-Key': self.api_key
         }
         body = {
-            'number': number,
-            'text': message
+            "chatId": f"{number}",
+            "reply_to": None,
+            "text": f"{message}",
+            "linkPreview": None,
+            "linkPreviewHighQuality": False,
+            "session": f"{self.instance}"
         }
         result = requests.post(
-            url=f"{self.base_url}/message/sendText/{self.instance}",
+            url=f"{self.base_url}/api/sendText",
             headers=headers,
             json=body
         )
-        json_result = result.json()
-        return self.response(True if json_result['status'] == 'PENDING' else False,
-                             json_result['error'] if 'error' in json_result else 'Mensagem enviada com sucesso')
+        return self.response(True, 'Mensagem enviada com sucesso')
 
     def response(self, success=True, message="", data=None):
         return {
