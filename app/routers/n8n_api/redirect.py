@@ -1,7 +1,10 @@
+import os
+
 from fastapi.routing import APIRouter
 from pydantic import BaseModel
 from sqlalchemy import text
 
+from app.Evolution import Evolution
 from app.database import SessionLocal
 
 redirect_router = APIRouter(
@@ -37,9 +40,15 @@ async def in_human(idd):
 async def to_human(to_human: ToHuman):
     db = SessionLocal()
     try:
-        db.execute(text(f"DELETE FROM human_support WHERE id = {to_human.telefone} OR telefone = '{to_human.telefone}'"))
+        db.execute(
+            text(f"DELETE FROM human_support WHERE id = {to_human.telefone} OR telefone = '{to_human.telefone}'"))
         db.execute(text('INSERT INTO human_support (telefone) VALUES (:telefone)'), {"telefone": to_human.telefone})
         db.commit()
+
+        # Enviar mensagem para o admin
+        ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
+                       os.environ.get('WAHA_INSTANCE'))
+        ev.simple_text(to_human.telefone, f"⚠ O número {to_human.telefone} está aguardando atendimento humano.")
 
         return response(True, "Cliente enviado para o suporte humano")
     finally:
