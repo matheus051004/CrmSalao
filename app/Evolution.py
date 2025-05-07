@@ -16,7 +16,7 @@ class Evolution:
             'X-Api-Key': self.api_key
         }
         body = {
-            "chatId": f"{number}",
+            "chatId": f"{number}@c.us",
             "reply_to": None,
             "text": f"{message}",
             "linkPreview": None,
