@@ -40,8 +40,7 @@ async def in_human(idd):
 async def to_human(to_human: ToHuman):
     db = SessionLocal()
     try:
-        db.execute(
-            text(f"DELETE FROM human_support WHERE id = {to_human.telefone} OR telefone = '{to_human.telefone}'"))
+        db.execute(text(f"DELETE FROM human_support WHERE id = {to_human.telefone} OR telefone = '{to_human.telefone}'"))
         db.execute(text('INSERT INTO human_support (telefone) VALUES (:telefone)'), {"telefone": to_human.telefone})
         db.commit()
 
@@ -51,6 +50,18 @@ async def to_human(to_human: ToHuman):
         ev.simple_text(to_human.telefone, f"⚠ O número {os.environ.get('WHATSAPP_ADMIN_NUMBER')} está aguardando atendimento humano.")
 
         return response(True, "Cliente enviado para o suporte humano")
+    finally:
+        db.close()
+
+
+@redirect_router.post('/to-ia', name="n8n-to-ia")
+async def to_ia(to_human: ToHuman):
+    db = SessionLocal()
+    try:
+        db.execute(text(f"DELETE FROM human_support WHERE id = {to_human.telefone} OR telefone = '{to_human.telefone}'"))
+        db.commit()
+
+        return response(True, "Cliente enviado para o suporte IA")
     finally:
         db.close()
 
