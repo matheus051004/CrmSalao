@@ -1,4 +1,5 @@
 from fastapi.routing import APIRouter
+from pydantic import BaseModel
 from sqlalchemy import text
 
 from app.database import SessionLocal
@@ -7,6 +8,10 @@ redirect_router = APIRouter(
     prefix="/redirect",
     include_in_schema=True,
 )
+
+
+class ToHuman(BaseModel):
+    idd: str
 
 
 @redirect_router.get("/in-human/{idd}", name="n8n-in-human")
@@ -24,6 +29,17 @@ async def in_human(idd):
                 "exist": True,
                 "data": rows[0]
             })
+    finally:
+        db.close()
+
+
+@redirect_router.post('to-human', name="n8n-to-human")
+async def to_human(to_human: ToHuman):
+    db = SessionLocal()
+    try:
+        db.execute(text(f"DELETE FROM human_support WHERE id = {to_human.idd} OR telefone = '{to_human.idd}'"))
+        db.execute(text('INSERT INTO human_support (telefone) VALUES (:telefone)'), {"telefone": to_human.idd})
+        db.commit()
     finally:
         db.close()
 
