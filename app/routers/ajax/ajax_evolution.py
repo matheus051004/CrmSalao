@@ -2,7 +2,6 @@ import os
 
 from fastapi import APIRouter
 from fastapi import Request
-import requests
 
 from app.Evolution import Evolution
 
