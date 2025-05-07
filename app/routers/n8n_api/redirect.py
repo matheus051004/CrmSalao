@@ -33,13 +33,15 @@ async def in_human(idd):
         db.close()
 
 
-@redirect_router.post('to-human', name="n8n-to-human")
+@redirect_router.post('/to-human', name="n8n-to-human")
 async def to_human(to_human: ToHuman):
     db = SessionLocal()
     try:
         db.execute(text(f"DELETE FROM human_support WHERE id = {to_human.idd} OR telefone = '{to_human.idd}'"))
         db.execute(text('INSERT INTO human_support (telefone) VALUES (:telefone)'), {"telefone": to_human.idd})
         db.commit()
+
+        return response(True, "Cliente enviado para o suporte humano")
     finally:
         db.close()
 
