@@ -114,6 +114,7 @@
         const msgFollowUpInput = document.getElementById('msg_follow_up');
         const assistantNameInput = document.getElementById('assistant_name');
         const crmSloganInput = document.getElementById('crm_slogan');
+        const googleCredJsonInput = document.getElementById('google_cred_json');
 
         document.querySelector('.submit-configs').addEventListener('click', async () => {
             const notyf = new Notyf();
@@ -130,7 +131,8 @@
                         msg_cancel: msgCancelInput.value,
                         msg_follow_up: msgFollowUpInput.value,
                         assistant_name: assistantNameInput.value,
-                        crm_slogan: crmSloganInput.value
+                        crm_slogan: crmSloganInput.value,
+                        google_cred_json: googleCredJsonInput.value
                     })
                 });
 

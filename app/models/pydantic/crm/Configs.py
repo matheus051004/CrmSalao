@@ -9,3 +9,4 @@ class Configs(BaseModel):
     msg_follow_up: str
     assistant_name: str
     crm_slogan: str
+    google_cred_json: str

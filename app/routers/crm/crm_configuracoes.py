@@ -30,6 +30,7 @@ async def configuracoes_post(config: Configs):
     update_setting('msg_follow_up', config.msg_follow_up)
     update_setting('assistant_name', config.assistant_name)
     update_setting('salao_slogan', config.crm_slogan)
+    update_setting('google_cred_json', config.google_cred_json)
 
     return response(True, "Configurações salvas com sucesso")
 
