@@ -53,9 +53,16 @@
                         <input type="number" class="form-control" id="follow_up_minutes"
                                value="{{ app_settings('follow_up_minutes') }}">
                     </div>
-                    <div>
+                    <div class="mb-4">
                         <label class="form-label">Nome da assistente</label>
                         <input type="text" class="form-control" id="assistant_name" value="{{ app_settings('assistant_name') }}">
+                    </div>
+                    <hr class="mb-4">
+                    <div>
+                        <label class="form-label">Credencial Google da conta de serviço (JSON)</label>
+                        <textarea id="google_cred_json" class="form-control" rows="5">
+                            {{ app_settings('google_cred_json') }}
+                        </textarea>
                     </div>
                 </div>
             </div>
