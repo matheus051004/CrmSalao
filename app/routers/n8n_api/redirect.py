@@ -47,7 +47,7 @@ async def to_human(to_human: ToHuman):
         # Enviar mensagem para o admin
         ev = Evolution(os.environ.get('WAHA_API_URL'), os.environ.get('WAHA_API_KEY'),
                        os.environ.get('WAHA_INSTANCE'))
-        ev.simple_text(to_human.telefone, f"⚠ O número {os.environ.get('WHATSAPP_ADMIN_NUMBER')} está aguardando atendimento humano.")
+        ev.simple_text(os.environ.get('WHATSAPP_ADMIN_NUMBER'), f"⚠ O número {to_human.telefone} está aguardando atendimento humano.")
 
         return response(True, "Cliente enviado para o suporte humano")
     finally:
