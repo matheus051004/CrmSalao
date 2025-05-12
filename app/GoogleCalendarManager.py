@@ -18,7 +18,7 @@ class GoogleCalendarManager:
         self.calendar_id = calendar_id
 
         try:
-            credentials_json = base64.b64decode(credentials_json_b64).decode('utf-8')
+            credentials_json = credentials_json_b64
             credentials_dict = json.loads(credentials_json)
             self.credentials = service_account.Credentials.from_service_account_info(
                 credentials_dict,
