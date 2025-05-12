@@ -31,7 +31,7 @@ async def concluir_agendamento(agendamento_confirm: AgendamentoComplete):
         db.commit()
 
         # Google Calendar
-        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, app_settings('google_cred_json'))
         gcm.delete_event(agendamento.google_event_id)
 
         # notificar
@@ -69,7 +69,7 @@ async def cancelar_agendamento(agendamento_confirm: AgendamentoComplete):
         db.commit()
 
         # Google Calendar
-        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, app_settings('google_cred_json'))
         gcm.delete_event(agendamento.google_event_id)
 
         # notificar

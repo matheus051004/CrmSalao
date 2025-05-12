@@ -7,6 +7,7 @@ from sqlalchemy import func, or_
 
 from app import Servico, Profissional, Cliente
 from app.database import SessionLocal
+from app.jinja import app_settings
 from app.models.agendamentos import Agendamento
 from app.models.pydantic.api.AgendamentoCancel import AgendamentoCancel
 from app.models.pydantic.api.AgendamentoCreate import AgendamentoCreate
@@ -150,7 +151,7 @@ async def criar_agendamento(dados: AgendamentoCreate):
         db.refresh(novo_agendamento)
 
         # google calendar
-        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, app_settings('google_cred_json'))
         idd, htmlLink = gcm.create_event(
             summary=titulo_auto,
             start_time=inicio_agendamento,
@@ -206,7 +207,7 @@ async def cancelar_agendamento(agendamento_cancel: AgendamentoCancel):
         profissional = db.query(Profissional).filter(Profissional.id == agendamento.profissional_id).first()
 
         # Remove o evento do Google Calendar
-        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, app_settings('google_cred_json'))
         gcm.delete_event(agendamento.google_event_id)
 
         return response(True, "Agendamento cancelado com sucesso")
@@ -275,7 +276,7 @@ async def reagendar_agendamento(agendamento_reschedule: AgendamentoReschedule):
         db.commit()
 
         # Google Calendar
-        gcm = GoogleCalendarManager(profissional.calendar_id, os.environ.get('GOOGLE_CREDENTIAL_JSON_B64'))
+        gcm = GoogleCalendarManager(profissional.calendar_id, app_settings('google_cred_json'))
         gcm.reschedule_event(
             event_id=agendamento.google_event_id,
             new_start_time=date,
