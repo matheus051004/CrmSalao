@@ -25,14 +25,20 @@ async def follow_up():
     db = SessionLocal()
     try:
         # Agendamentos que estão próximos
+        from datetime import datetime, timedelta
+
+        # Calcula o tempo limite usando Python
+        current_time = datetime.now()
+        limit_time = current_time + timedelta(minutes=int(minutes_follow_up))
+
         query = db.execute(
             text("""
                 SELECT * FROM agendamentos 
-                WHERE start <= NOW() + (:minutes || ' minutes')::INTERVAL 
+                WHERE start <= :limit_time
                 AND notified = false
                 AND status = 'agendado'
             """),
-            {"minutes": str(minutes_follow_up)}
+            {"limit_time": limit_time}
         )
         result_proxy = query.mappings()  # Isso retorna dicionários em vez de tuplas
         agendamentos = result_proxy.all()
